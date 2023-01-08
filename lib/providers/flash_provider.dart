@@ -32,7 +32,6 @@ class FlashState extends ChangeNotifier {
   }
 
   bool checkDbAvailability() {
-    //TODO: Change the logic
     return _coreDb.containsKey('dataAvailable');
   }
 

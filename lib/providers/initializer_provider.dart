@@ -83,11 +83,11 @@ class InitializerState extends ChangeNotifier {
       required Future<void> Function() function}) async {
     if (stopCondition!()) return;
 
-    ConnectivityResult _connectivityResult =
+    ConnectivityResult connectivityResult =
         await (Connectivity().checkConnectivity());
 
     //Check whether connection state has changed or not and notify listeners for state changes
-    if (_isError != (_connectivityResult == ConnectivityResult.none)) {
+    if (_isError != (connectivityResult == ConnectivityResult.none)) {
       _isError = !_isError;
     }
 

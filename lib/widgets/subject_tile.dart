@@ -10,7 +10,6 @@ class SubjectTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(GradingSystem.pointsToGrade(course.pointAchieved));
     return Card(
       elevation: 5.0,
       child: ListTile(

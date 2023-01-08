@@ -41,7 +41,7 @@ class CourseList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return SubjectTile(
           course: state.courses[index],
-          onPressed: ((point) => {state.setGrade(index, point), print(point)}),
+          onPressed: ((point) => state.setGrade(index, point)),
         );
       },
     );

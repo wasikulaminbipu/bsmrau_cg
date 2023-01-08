@@ -346,9 +346,6 @@ class Course extends HiveObject {
       {required this.name, required this.credits, required this.pointAchieved});
 
   factory Course.fromJson(Map<String, dynamic> course) {
-    String _name = course['name'];
-    num _credits = course['credits'];
-
     return Course(
         name: course['name'],
         credits: (course['credits'] as num).toDouble(),
