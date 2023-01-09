@@ -26,7 +26,8 @@ class InfoCollector extends StatelessWidget {
     });
     return Visibility(
       visible: !state.isStateLoading,
-      replacement: ProgressViewer(isError: state.isError),
+      replacement: ProgressViewer(
+          isError: state.isError, progressText: state.stateProgressText),
       child: ListView(
         shrinkWrap: true,
         children: [

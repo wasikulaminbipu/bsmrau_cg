@@ -7,6 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
+enum Error {
+  noError,
+  databaseError,
+  downloadError,
+  connectionError,
+  noInternet
+}
+
 class InitializerState extends ChangeNotifier {
   // late List<String<String>> _bachNoList = [];
   late List<int> _batchNoList = [];
@@ -27,10 +35,11 @@ class InitializerState extends ChangeNotifier {
   BaseData? _baseData;
 
   //State Control Variables
-  bool _isError = false;
+  // bool _isError = false;
   bool _isReady = false;
   bool _stateLoading = true;
   bool isInitialized = false;
+  Error _error = Error.noError;
 
   //============================================================================
   //------------------State Initializers----------------------------------------
@@ -77,6 +86,20 @@ class InitializerState extends ChangeNotifier {
     return _baseData != null;
   }
 
+  void _registerError(Error error) {
+    if (error == _error) return;
+
+    if (_error.index < error.index) {
+      _error = error;
+    }
+  }
+
+  void _removeError(Error error) {
+    if (error == _error) {
+      _error = Error.noError;
+    }
+  }
+
   Future<void> _recursiveFunctions(
       {bool Function()? stopCondition,
       void Function()? runAfter,
@@ -87,28 +110,32 @@ class InitializerState extends ChangeNotifier {
         await (Connectivity().checkConnectivity());
 
     //Check whether connection state has changed or not and notify listeners for state changes
-    if (_isError != (connectivityResult == ConnectivityResult.none)) {
-      _isError = !_isError;
+
+    if (connectivityResult != ConnectivityResult.wifi &&
+        connectivityResult != ConnectivityResult.mobile) {
+      _registerError(Error.noInternet);
+    } else {
+      _removeError(Error.noInternet);
     }
 
     //Try to use the function
-    if (!_isError) {
+    if (_error != Error.noInternet) {
       try {
         await function();
+        _removeError(Error.connectionError);
       } catch (e) {
-        _isError = true;
+        _registerError(Error.connectionError);
       }
     }
 
     //Check whether the condition has met or not
 
-    if (stopCondition() && !_isError) {
+    if (stopCondition()) {
+      _error = Error.noError;
       runAfter!();
-      _isError = false;
-      notifyListeners();
     } else {
       notifyListeners();
-      await _recursiveFunctions(
+      _recursiveFunctions(
           function: function, stopCondition: stopCondition, runAfter: runAfter);
     }
   }
@@ -121,11 +148,11 @@ class InitializerState extends ChangeNotifier {
                 if (value.statusCode == 200)
                   {
                     _baseData = BaseData.fromJson(json.decode(value.body)),
-                    _isError = false
+                    _removeError(Error.downloadError)
                   }
                 else
                   {
-                    _isError = true,
+                    _registerError(Error.downloadError),
                     _baseData = const BaseData(
                         totalFaculties: 0, totalBatches: 0, faculties: [])
                   }
@@ -146,7 +173,7 @@ class InitializerState extends ChangeNotifier {
   }
 
   bool get isError {
-    return _isError;
+    return _error != Error.noError;
   }
 
   int get selectedBatch {
@@ -179,6 +206,24 @@ class InitializerState extends ChangeNotifier {
 
   List<String> get getTermList {
     return _termList;
+  }
+
+  String get stateProgressText {
+    String message = 'Loading States...';
+
+    if (_error == Error.noInternet) {
+      message = 'No Internet Connection';
+    } else if (_error == Error.databaseError) {
+      message = 'Database Failed to Connect';
+    } else if (_error == Error.connectionError) {
+      message = 'Connection Failed!';
+    } else if (_error == Error.downloadError) {
+      message = 'Download Failed!';
+    } else {
+      message = 'Loading States...';
+    }
+
+    return message;
   }
 
   //============================================================================
@@ -239,7 +284,6 @@ class InitializerState extends ChangeNotifier {
 
   Future<void> save() async {
     if (_stateLoading == false) {
-      _isError = false;
       _stateLoading = true;
       notifyListeners();
     }
@@ -293,12 +337,11 @@ class InitializerState extends ChangeNotifier {
             {
               _coursePlan =
                   CoursePlan.fromJson(jsonDecode(response.body.toString())),
-              saveDb(_coursePlan!)
+              saveDb(_coursePlan!),
+              _removeError(Error.databaseError)
             }
           else
-            {
-              _isError = true,
-            }
+            {_registerError(Error.databaseError)}
         });
   }
 
