@@ -11,7 +11,8 @@ class CalculatorState extends ChangeNotifier {
     startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
     currentLocation: CourseLocation(levelIndex: 0, termIndex: 0),
   );
-  late final Box<dynamic> _coreDb;
+
+  late Box<dynamic> _coreDb;
 
   void initialize() async {
     if (_initialized) return;

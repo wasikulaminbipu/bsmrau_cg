@@ -31,17 +31,17 @@ class CourseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<CalculatorState>();
+    final state = context.read<CalculatorState>();
     state.initialize();
 
     return ListView.builder(
       padding: const EdgeInsets.all(0.00),
       shrinkWrap: true,
-      itemCount: state.courses.length,
+      itemCount:
+          context.select<CalculatorState, int>((value) => value.courses.length),
       itemBuilder: (BuildContext context, int index) {
         return SubjectTile(
-          course: state.courses[index],
-          onPressed: ((point) => state.setGrade(index, point)),
+          courseIndex: index,
         );
       },
     );

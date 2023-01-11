@@ -26,7 +26,9 @@ class CoursePlan extends HiveObject {
       required this.startLocation,
       required this.currentLocation});
 
-  factory CoursePlan.fromJson(Map<String, dynamic> coursePlan) {
+  factory CoursePlan.fromJson(
+    Map<String, dynamic> coursePlan,
+  ) {
     List<Level> tmpLevels = [];
 
     //Decode all the level files and store it in the temporary variable
@@ -54,7 +56,7 @@ class CoursePlan extends HiveObject {
     startLocation = _getIndex(term: term, level: level);
     startCgpa = cgpa;
     currentLocation = startLocation;
-    save();
+    // save();
   }
 
   //This method is created for setting the achieved point
@@ -156,17 +158,19 @@ class CoursePlan extends HiveObject {
     double tmpTotalPoints = 0.00;
 
     //Loop over all the levels available upto current level
-    for (var i = 0; i < currentLocation.levelIndex + 1; i++) {
+    for (var i = 0; i <= currentLocation.levelIndex; i++) {
       //Loop over all the terms available upto current term
-      for (var j = 0; j < currentLocation.termIndex + 1; j++) {
+      for (var j = 0; j <= currentLocation.termIndex; j++) {
         var data = levels[i].terms[j];
 
-        //Check If current location is before the start Location
-        if (i < startLocation.levelIndex && j < startLocation.termIndex) {
+        //Check If current location is before the start Loc      ation
+        if (i < startLocation.levelIndex ||
+            (startLocation.levelIndex == i && j < startLocation.termIndex)) {
           //When its before the start Location
           tmpTotalCredits += data.totalCredits;
           tmpTotalPoints += (startCgpa * data.totalCredits);
         } else {
+          // print(startCgpa);
           //When its in start location or further
           tmpTotalCredits += data.workingCredits;
           tmpTotalPoints += (data.workingCredits * data.gpa);

@@ -48,6 +48,7 @@ dependencies:
   connectivity_plus: ^3.0.2
   animated_flip_counter: ^0.2.5
   google_fonts: ^3.0.1
+  tuple: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -106,12 +107,12 @@ flutter_native_splash:
   color: "#FBAE9D"
   color_dark: "5B3F44"
   # branding: assets/images/branding.png
-  # image: assets/images/bsmrau_logo.png
+  image: assets/images/ic_launcher.png
 
   android_12:
     color: "#FBAE9D"
     color_dark: "5B3F44"
-    # image: assets/images/bsmrau_logo.png
+    image: assets/images/ic_launcher.png
     # branding: assets/images/branding.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

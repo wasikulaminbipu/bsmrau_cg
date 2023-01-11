@@ -15,7 +15,9 @@ class TermSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<CalculatorState>();
+    final state = context.read<CalculatorState>();
+    final termName =
+        context.select<CalculatorState, String>((value) => value.termName);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -30,7 +32,7 @@ class TermSelector extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                   fixedSize: Size.fromWidth(screenWidth / 10 * 6),
                   elevation: 5.0),
-              child: Text(state.termName)),
+              child: Text(termName)),
           ActionButton(
             icon: Icons.skip_next,
             onPressed: state.showNextButton ? () => state.nextTerm() : null,

@@ -1,21 +1,24 @@
-import 'package:bsmrau_cg/modals/course_plan.dart';
-import 'package:bsmrau_cg/pages/calculator_page/calculator_page.dart';
-import 'package:bsmrau_cg/pages/initializer_page/initializer_page.dart';
-import 'package:bsmrau_cg/providers/calculator_provider.dart';
-import 'package:bsmrau_cg/providers/initializer_provider.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
+//Import Type: Basic Flutter
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/services.dart';
+//Import Type: Splash Screen
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+// Import Type: Database
+import 'package:hive_flutter/hive_flutter.dart';
+//Import Type: Theming
+import 'package:bsmrau_cg/theme.dart';
+//Import Type: Provider
+import 'package:provider/provider.dart';
+import 'package:bsmrau_cg/providers/calculator_provider.dart';
+import 'package:bsmrau_cg/providers/initializer_provider.dart';
+//Import Type: Page
+import 'package:bsmrau_cg/pages/calculator_page/calculator_page.dart';
+import 'package:bsmrau_cg/pages/initializer_page/initializer_page.dart';
+//Import Type: Modals
+import 'package:bsmrau_cg/modals/course_plan.dart';
 
-void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  //Database
+Future<void> initializeDb() async {
   await Hive.initFlutter();
   Hive.registerAdapter(CourseAdapter());
   Hive.registerAdapter(TermAdapter());
@@ -23,6 +26,13 @@ void main() async {
   Hive.registerAdapter(CoursePlanAdapter());
   Hive.registerAdapter(CourseLocationAdapter());
   await Hive.openBox('coreDb');
+}
+
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  //Database
+  await initializeDb();
 
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('google_fonts/OFL.txt');
@@ -44,29 +54,8 @@ class AppBSMRAUCG extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BSMRAU CG',
-      theme: FlexThemeData.light(
-        scheme: FlexScheme.sakura,
-        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 9,
-        swapColors: true,
-        subThemesData: const FlexSubThemesData(),
-        keyColors: const FlexKeyColors(),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        swapLegacyOnMaterial3: true,
-        fontFamily: GoogleFonts.bakbakOne().fontFamily,
-      ),
-      darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.sakura,
-        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-        blendLevel: 15,
-        subThemesData: const FlexSubThemesData(),
-        keyColors: const FlexKeyColors(),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        swapLegacyOnMaterial3: true,
-        fontFamily: GoogleFonts.bakbakOne().fontFamily,
-      ),
+      theme: lightTheme(),
+      darkTheme: darkTheme(),
 // If you do not have a themeMode switch, uncomment this line
 // to let the device system mode control the theme mode:
 // themeMode: ThemeMode.system,

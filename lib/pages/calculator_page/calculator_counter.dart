@@ -2,6 +2,7 @@ import 'package:bsmrau_cg/pages/calculator_page/grade_viewer.dart';
 import 'package:bsmrau_cg/providers/calculator_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 class CalculatorCounter extends StatelessWidget {
   const CalculatorCounter({super.key});
@@ -13,11 +14,6 @@ class CalculatorCounter extends StatelessWidget {
 
     return Card(
       elevation: 5.0,
-      // height: screenHeight / 10 * 5,
-      // decoration: BoxDecoration(
-      //     color: Theme.of(context).colorScheme.surface,
-      //     boxShadow: [BoxShadow(blurRadius: 2.0, spreadRadius: 1.0)]),
-      // color: Theme.of(context).colorScheme.surface,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -31,7 +27,6 @@ class CalculatorCounter extends StatelessWidget {
               ),
             ),
             GradeViewer(screenWidth: screenWidth),
-            // TermSelector(screenHeight: screenHeight, screenWidth: screenWidth),
             SizedBox(
               height: screenHeight * 0.03,
             )
@@ -49,13 +44,13 @@ class CourseAmountChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<CalculatorState>();
+    final state = context.select<CalculatorState, Tuple2<int, int>>(
+        (value) => Tuple2(value.usedCourses, value.totalCourses));
 
     return Tooltip(
-      message:
-          "Count is based on ${state.usedCourses} out of ${state.totalCourses} courses",
+      message: "Count is based on ${state.item1} out of ${state.item2} courses",
       child: Chip(
-        label: Text("${state.usedCourses}/${state.totalCourses}"),
+        label: Text("${state.item1}/${state.item2}"),
       ),
     );
   }

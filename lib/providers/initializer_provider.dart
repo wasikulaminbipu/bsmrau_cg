@@ -337,6 +337,10 @@ class InitializerState extends ChangeNotifier {
             {
               _coursePlan =
                   CoursePlan.fromJson(jsonDecode(response.body.toString())),
+              _coursePlan!.inputInitialData(
+                  level: _selectedLevel,
+                  term: _selectedTerm,
+                  cgpa: _selectedCGPA),
               saveDb(_coursePlan!),
               _removeError(Error.databaseError)
             }

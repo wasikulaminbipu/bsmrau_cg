@@ -13,42 +13,67 @@ class GradeViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<CalculatorState>();
     return SizedBox(
       width: screenWidth / 10 * 9,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              const Text("Calculated GPA", style: TextStyle(fontSize: 20.0)),
-              AnimatedFlipCounter(
-                value: state.gpa,
-                fractionDigits: 4,
-                textStyle: const TextStyle(
-                    fontSize: 70.0, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+          const DisplayGpa(),
           Container(
             height: screenWidth / 6,
             width: screenWidth / 1000,
             color: Colors.black,
           ),
-          Column(
-            children: [
-              const Text("CGPA", style: TextStyle(fontSize: 18.0)),
-              AnimatedFlipCounter(
-                value: state.cgpa,
-                fractionDigits: 4,
-                textStyle: const TextStyle(
-                  fontSize: 29.0,
-                ),
-              ),
-            ],
-          ),
+          const DisplayCgpa(),
         ],
       ),
+    );
+  }
+}
+
+class DisplayCgpa extends StatelessWidget {
+  const DisplayCgpa({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final double cgpa =
+        context.select<CalculatorState, double>((value) => value.cgpa);
+    return Column(
+      children: [
+        const Text("CGPA", style: TextStyle(fontSize: 18.0)),
+        AnimatedFlipCounter(
+          value: cgpa,
+          fractionDigits: 4,
+          textStyle: const TextStyle(
+            fontSize: 29.0,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DisplayGpa extends StatelessWidget {
+  const DisplayGpa({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final double gpa =
+        context.select<CalculatorState, double>((value) => value.gpa);
+    return Column(
+      children: [
+        const Text("Calculated GPA", style: TextStyle(fontSize: 20.0)),
+        AnimatedFlipCounter(
+          value: gpa,
+          fractionDigits: 4,
+          textStyle:
+              const TextStyle(fontSize: 70.0, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 }
