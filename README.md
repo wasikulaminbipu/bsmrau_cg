@@ -1,11 +1,11 @@
 # BSMRAU CG 
 ## Latest Ever CGPA Calculator App for BSMRAU, Bangladesh Students
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger) [Download Now]()
 
 BSMRAU CG is a ready to use flutter app that can be used both in android and ios in some easy steps. This app is generally created for Bangabandhu Sheikh Mujibur Rahman Agricultural University Students. But this app is based on GNU License 3.0 so anyone can change, edit, distribute the app without any restrictions as long as it is open source. Enjoy the app and Pray for me.
 
-[Download Now]()
+
 
 ## Features
 - Easy to calculate cgpa

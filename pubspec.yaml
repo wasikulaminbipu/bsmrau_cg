@@ -112,7 +112,7 @@ flutter_native_splash:
   android_12:
     color: "#FBAE9D"
     color_dark: "5B3F44"
-    image: assets/images/ic_launcher.png
+    # image: assets/images/ic_launcher.png
     # branding: assets/images/branding.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
