@@ -33,12 +33,14 @@ class CourseList extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<CalculatorState>().initialize();
 
+    final int courseCount =
+        context.select<CalculatorState, int>((value) => value.courses.length);
+
     return Flexible(
       child: ListView.builder(
         padding: const EdgeInsets.all(0.00),
         shrinkWrap: true,
-        itemCount: context
-            .select<CalculatorState, int>((value) => value.courses.length),
+        itemCount: courseCount,
         itemBuilder: (BuildContext context, int index) {
           return SubjectTile(
             courseIndex: index,

@@ -16,8 +16,8 @@ class SubjectTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.select<CalculatorState,
             Tuple3<String, double, void Function(int, double)>>(
-        (value) => Tuple3(value.courses[courseIndex].name,
-            value.courses[courseIndex].credits, value.setGrade));
+        (value) => Tuple3(value.getCourseTitle(courseIndex),
+            value.getCourseCredit(courseIndex), value.setGrade));
 
     return Card(
       elevation: 5.0,
@@ -51,7 +51,7 @@ class GradeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final point = context.select<CalculatorState, double>(
-        (value) => value.courses[courseIndex].pointAchieved);
+        (value) => value.getPointAchieved(courseIndex));
     return CircleAvatar(
       radius: 40.0,
       child: Text(GradingSystem.pointsToGrade(point)),

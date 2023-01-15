@@ -69,6 +69,31 @@ class CalculatorState extends ChangeNotifier {
     return used;
   }
 
+  //----------------------Function Based Getters--------------------------------
+  String getCourseTitle(int index) {
+    String title = '';
+
+    if (index < courses.length) title = courses[index].name;
+
+    return title;
+  }
+
+  double getCourseCredit(int index) {
+    double credit = 0;
+
+    if (index < courses.length) credit = courses[index].credits;
+
+    return credit;
+  }
+
+  double getPointAchieved(int index) {
+    double points = 0;
+
+    if (index < courses.length) points = courses[index].pointAchieved;
+
+    return points;
+  }
+
   //============================================================================
   //---------------------------Setters------------------------------------------
   //============================================================================
