@@ -31,19 +31,20 @@ class CourseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<CalculatorState>();
-    state.initialize();
+    context.read<CalculatorState>().initialize();
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(0.00),
-      shrinkWrap: true,
-      itemCount:
-          context.select<CalculatorState, int>((value) => value.courses.length),
-      itemBuilder: (BuildContext context, int index) {
-        return SubjectTile(
-          courseIndex: index,
-        );
-      },
+    return Flexible(
+      child: ListView.builder(
+        padding: const EdgeInsets.all(0.00),
+        shrinkWrap: true,
+        itemCount: context
+            .select<CalculatorState, int>((value) => value.courses.length),
+        itemBuilder: (BuildContext context, int index) {
+          return SubjectTile(
+            courseIndex: index,
+          );
+        },
+      ),
     );
   }
 }
