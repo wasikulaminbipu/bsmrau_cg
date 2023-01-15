@@ -35,6 +35,7 @@ BSMRAU CG is a ready to use flutter app that can be used both in android and ios
 Getting Started is very easy. You can easily clone or fork this project and then start to build as you want.
 
 Cloning the application
+
 ```git clone https://github.com/wasikulaminbipu/bsmrau_cg```
 
 After cloning the application open the app in Visual Studio Code or Android Studio. Then you need to download all the dependency mention in the app. To get all the dependency use this command..
@@ -42,6 +43,7 @@ After cloning the application open the app in Visual Studio Code or Android Stud
 ```flutter pub get .```
 
 Now, run the flutter app in your device
+
 ```flutter run android```
 
 Hurrah! You are ready to go...
