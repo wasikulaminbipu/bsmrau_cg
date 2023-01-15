@@ -18,11 +18,17 @@ BSMRAU CG is a ready to use flutter app that can be used both in android and ios
 
 ## Technical Specifications
 **Project Name:** bsmrau_cg (App Name: BSMRAU CG)
+
 **Version Cicle:** 3.0
+
 **App Engine:** [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev/)
+
 **Programming Language:** [![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
+
 **Online Database Provider:** [Npoint](https://www.npoint.io/)
+
 **License Type:** GNU Public License 3.0 (You can do anything just your project must be in same license)
+
 **Platform Supported:** ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white) ![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
 
 ## Getting Started
