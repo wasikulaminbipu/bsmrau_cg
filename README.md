@@ -1,5 +1,5 @@
 # BSMRAU CG 
-## Latest Ever CGPA Calculator App for BSMRAU, Bangladesh Students
+## _Latest Ever CGPA Calculator App for BSMRAU, Bangladesh Students_
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger) [Download Now](https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_4.apk)
 
@@ -19,7 +19,7 @@ BSMRAU CG is a ready to use flutter app that can be used both in android and ios
 ## Technical Specifications
 **Project Name:** bsmrau_cg (App Name: BSMRAU CG)
 
-**Version Cicle:** 3.0
+**Version Cycle:** 3.0
 
 **App Engine:** [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev/)
 
