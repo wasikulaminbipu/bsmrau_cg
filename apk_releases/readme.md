@@ -15,7 +15,7 @@ All the changes made are registered here
 
 #### Version: Alpha 3
 
-[![download_button](https://user-images.githubusercontent.com/29209213/212632204-80529cf9-afab-4588-bf93-5248c4fb191f.png)]((https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_3.apk)
+[![download_button](https://user-images.githubusercontent.com/29209213/212632204-80529cf9-afab-4588-bf93-5248c4fb191f.png)](https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_3.apk)
 
 ##### Updates:
 - Splash Screen has been updated
@@ -37,7 +37,7 @@ All the changes made are registered here
 
 #### Version: Alpha 1
 
-[![download_button](https://user-images.githubusercontent.com/29209213/212632204-80529cf9-afab-4588-bf93-5248c4fb191f.png)]((https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_1.apk)
+[![download_button](https://user-images.githubusercontent.com/29209213/212632204-80529cf9-afab-4588-bf93-5248c4fb191f.png)](https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_1.apk)
 
 ##### Features:
 - Primary app release with all the basic features
