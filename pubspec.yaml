@@ -49,6 +49,7 @@ dependencies:
   animated_flip_counter: ^0.2.5
   google_fonts: ^3.0.1
   tuple: ^2.0.1
+  csv: ^5.0.1
 
 dev_dependencies:
   flutter_test:

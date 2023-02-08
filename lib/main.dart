@@ -18,6 +18,8 @@ import 'package:bsmrau_cg/pages/initializer_page/initializer_page.dart';
 //Import Type: Modals
 import 'package:bsmrau_cg/modals/course_plan.dart';
 
+import 'package:http/http.dart' as http;
+
 Future<void> initializeDb() async {
   await Hive.initFlutter();
   Hive.registerAdapter(CourseAdapter());
@@ -26,6 +28,13 @@ Future<void> initializeDb() async {
   Hive.registerAdapter(CoursePlanAdapter());
   Hive.registerAdapter(CourseLocationAdapter());
   await Hive.openBox('coreDb');
+}
+
+void importCSV() async {
+  await http
+      .get(Uri.parse(
+          'https://github.com/wasikulaminbipu/bsmrau_cg/db/base_data.csv'))
+      .then((value) => print(value.body));
 }
 
 void main() async {

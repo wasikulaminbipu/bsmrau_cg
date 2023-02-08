@@ -45,6 +45,16 @@ class CoursePlan extends HiveObject {
         currentLocation: CourseLocation(levelIndex: 0, termIndex: 0));
   }
 
+  // factory CoursePlan.fromCSV(String csvString) {
+
+  //   return CoursePlan(
+  //       faculty: coursePlan['faculty'],
+  //       levels: tmpLevels,
+  //       startCgpa: 0.00,
+  //       startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
+  //       currentLocation: CourseLocation(levelIndex: 0, termIndex: 0));
+  // }
+
   //-----------------------------------------------------------------------------
   //----------------Input Type Methods-------------------------------------------
   //-----------------------------------------------------------------------------
