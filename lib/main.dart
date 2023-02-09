@@ -1,4 +1,6 @@
 //Import Type: Basic Flutter
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +21,7 @@ import 'package:bsmrau_cg/pages/initializer_page/initializer_page.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:csv/csv.dart';
 
 Future<void> initializeDb() async {
   await Hive.initFlutter();
@@ -30,11 +33,12 @@ Future<void> initializeDb() async {
   await Hive.openBox('coreDb');
 }
 
-void importCSV() async {
+Future<void> importCSV() async {
+  print('Running');
   await http
       .get(Uri.parse(
-          'https://github.com/wasikulaminbipu/bsmrau_cg/db/base_data.csv'))
-      .then((value) => print(value.body));
+          'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/base_data.csv'))
+      .then((value) => print(value.body.runtimeType));
 }
 
 void main() async {
@@ -42,6 +46,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   //Database
   await initializeDb();
+  await importCSV();
 
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('google_fonts/OFL.txt');
