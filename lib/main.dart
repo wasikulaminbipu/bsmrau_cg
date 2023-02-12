@@ -1,6 +1,5 @@
 //Import Type: Basic Flutter
-import 'dart:convert';
-
+import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +20,6 @@ import 'package:bsmrau_cg/pages/initializer_page/initializer_page.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:csv/csv.dart';
 
 Future<void> initializeDb() async {
   await Hive.initFlutter();
@@ -35,10 +33,9 @@ Future<void> initializeDb() async {
 
 Future<void> importCSV() async {
   print('Running');
-  await http
-      .get(Uri.parse(
-          'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/base_data.csv'))
-      .then((value) => print(value.body.runtimeType));
+  final value = await http.get(Uri.parse(
+      'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'));
+  ParentDb.fromCSV(csvString: value.body.toString());
 }
 
 void main() async {

@@ -1,0 +1,71 @@
+﻿Level I,Summer,ANH 101,Gross Anatomy I,3,1.5
+Level I,Summer,ANH 102,General Histology & Embryology,3,1.5
+Level I,Summer,MPH 101,Animal Hygiene & Bio-Security,2,1.5
+Level I,Summer,ASN 101,General Animal Science,2,1.5
+Level I,Summer,ASN 102,Fodder Production,2,1.5
+Level I,Autumn,ANH 131,Gross Anatomy II,3,1.5
+Level I,Autumn,ANH 132,Systemic Histology,3,1.5
+Level I,Autumn,DPS 131,General Poultry Science,2,1.5
+Level I,Autumn,BMB 131,Biophysics & Chemistry of Biomolecules,3,1.5
+Level I,Autumn,CST 131,Computer Application,0,1.5
+Level I,Winter,PHP 161,General Physiology,3,1.5
+Level I,Winter,MPH 161,General Microbiology,3,1.5
+Level I,Winter,ASN 161,Draught and Meat Animal Production & Management,2,1.5
+Level I,Winter,DPS 161,General Dairy Science,2,1.5
+Level I,Winter,BMB 161,Metabolism of Biomolecules,3,0
+Level II,Summer,ANH 201,Comparative Anatomy,0,1.5
+Level II,Summer,PHP 201,Systemic Physiology,3,1.5
+Level II,Summer,PBL 201,General Parasitology & Entomology,3,1.5
+Level II,Summer,DPS 201,Poultry Production & Management,3,1.5
+Level II,Summer,AEC 201,Livestock Production Economics,3,0
+Level II,Autumn,PHP 231,Nutritional Physiology,2,0
+Level II,Autumn,MPH 231 Systemic Bacteriology & Mycology,,3,1.5
+Level II,Autumn,PBL 231,General & Nutritional Pathology,3,1.5
+Level II,Autumn,ASN 231,Wildlife Zoo Aquatic & Companion Animal Management,2,1.5
+Level II,Autumn,ABG 231,Animal Genetics,3,1.5
+Level II,Winter,PHP 261,General Pharmacology & Theraputics,3,1.5
+Level II,Winter,MPH 261,Virology,3,1.5
+Level II,Winter,PBL 261,Helminthology & Malacology,3,1.5
+Level II,Winter,ASN 261,Ruminant Nutrition Feeds & Feeding,2,1.5
+Level II,Winter,DPS 261,Dairy Animal Production & Management,2,1.5
+Level III,Summer,PHP 301,Systemic Pharmacology,3,0
+Level III,Summer,MPH 301,Immunology Serology & Molecular Techniques,2,1.5
+Level III,Summer,PBL 301,Protozoology,3,1.5
+Level III,Summer,PBL 302,Systemic Pathology & Oncology,3,1.5
+Level III,Summer,ABG 301,Animal Breeding,3,1.5
+Level III,Autumn,PHP 331 ,Toxicology,3,1.5
+Level III,Autumn,PBL 331,Pathology of Infectious Diseases,3,0
+Level III,Autumn,ASN 331,Non-Ruminant Nutrition Feeds & Feeding,2,1.5
+Level III,Autumn,DPS 331,Dairy and Poultry Product Technology,2,1.5
+Level III,Autumn,STC 331,Biostatistics,3,1.5
+Level III,Winter,ANH 361,Topographic & Surgical Anatomy,0,1.5
+Level III,Winter,PBL 361,Avian Pathology,3,1.5
+Level III,Winter,MED 361,General Medicine,3,1.5
+Level III,Winter,SRA 361,General Surgery,3,1.5
+Level III,Winter,ASN 361,Meat and Wool Technology & Waste Management,3,1.5
+Level IV,Summer,MED 401,Farm Animal Medicine,3,1.5
+Level IV,Summer,SRA 401,Anesthesiology,2,1.5
+Level IV,Summer,SRA 402,Radiology & Imaging,2,1.5
+Level IV,Summer,GOR 401,Gynecology & Reproductive Biotechnology,3,1.5
+Level IV,Summer,DPS 401,Breeder Farm Management,2,1.5
+Level IV,Autumn,MPH 431,Dairy Microbiology & Food Hygiene,3,1.5
+Level IV,Autumn,MED 431,Epidemiology & Preventive Medicine,3,1.5
+Level IV,Autumn,MED 432,Avian Medicine,3,1.5
+Level IV,Autumn,SRA 431,Farm Animal Surgery,3,1.5
+Level IV,Autumn,GOR 431,Andrology & Artificial Insemination,2,1.5
+Level IV,Winter,MED 461,Wildlife Zoo Aquatic & Companion Animal Medicine,3,1.5
+Level IV,Winter,SRA 461,Wildlife Zoo Aquatic & Companion Animal Surgery,2,1.5
+Level IV,Winter,GOR 461,Reproductive Immunology & Obstetrics,3,1.5
+Level IV,Winter,GOR 462,Theriogenology of Wildlife Zoo Aquatic & Companion Animal,2,1.5
+Level IV,Winter,AER 461,Veterinary Extension Education,3,1.5
+Level V,Summer,PHP 501,Clinical Pharmacology & Pharmacy,0,2
+Level V,Summer,MPH 501,Public Health & Zoonoses,2,0
+Level V,Summer,PBL 501,Clinical Pathology & Necropsy,0,2
+Level V,Summer,MED 501,Metabolic & Nutritional Diseases of Farm Animals,2,0
+Level V,Summer,MED 502,Forensic Medicine Jurisprudence & Animal Welfare,3,0
+Level V,Summer,MED 503,Medicine (Clinics),0,2
+Level V,Summer,SRA 501,Surgery (Clinics),0,2
+Level V,Summer,GOR 501,Theriogenology (Clinics),0,2
+Level V,Summer,AGB 501,Livestock & Poultry Marketting & Agri-Business,3,0
+Level V,Autumn,INT 531,Internship Program I,0,12
+Level V,Winter,INT 561,Internship Program II,0,16
