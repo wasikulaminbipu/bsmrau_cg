@@ -50,6 +50,7 @@ dependencies:
   google_fonts: ^3.0.1
   tuple: ^2.0.1
   csv: ^5.0.1
+  url_launcher: ^6.1.9
 
 dev_dependencies:
   flutter_test:

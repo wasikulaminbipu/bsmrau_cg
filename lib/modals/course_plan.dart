@@ -8,16 +8,16 @@ class CoursePlan extends HiveObject {
   // @HiveField(0)
   // String faculty = '';
 
-  @HiveField(1)
+  @HiveField(0)
   CourseLocation startLocation;
 
-  @HiveField(2)
+  @HiveField(1)
   double startCgpa = 0.00;
 
-  @HiveField(3)
+  @HiveField(2)
   CourseLocation currentLocation;
 
-  @HiveField(4)
+  @HiveField(3)
   List<Level> levels = [];
 
   CoursePlan(

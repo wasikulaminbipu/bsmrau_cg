@@ -7,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 enum Error {
   noError,
@@ -378,5 +379,21 @@ class InitializerState extends ChangeNotifier {
 
   void saveDb(CoursePlan coursePlan) {
     _coreDb.put('coursePlan', coursePlan);
+  }
+
+  //========================================================================
+  //------------------------------------Contact Methods---------------------
+  //========================================================================
+  Future<void> contactMessage() async {
+    await launchUrl(Uri.parse('sms:+8801521439342'));
+  }
+
+  Future<void> contactCall() async {
+    await launchUrl(Uri.parse('tel:+8801521439342'));
+  }
+
+  Future<void> contactMail() async {
+    await launchUrl(Uri.parse(
+        'mailto: wasikulaminbipu@gmail.com?subject=BSMRAU CG App Update&body=Please Update the app. I cant find my database'));
   }
 }
