@@ -17,7 +17,7 @@ class CoursePlanAdapter extends TypeAdapter<CoursePlan> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CoursePlan(
-      faculty: fields[0] as String,
+      // faculty: fields[0] as String,
       levels: (fields[4] as List).cast<Level>(),
       startCgpa: fields[2] as double,
       startLocation: fields[1] as CourseLocation,
@@ -29,8 +29,8 @@ class CoursePlanAdapter extends TypeAdapter<CoursePlan> {
   void write(BinaryWriter writer, CoursePlan obj) {
     writer
       ..writeByte(5)
-      ..writeByte(0)
-      ..write(obj.faculty)
+      // ..writeByte(0)
+      // ..write(obj.faculty)
       ..writeByte(1)
       ..write(obj.startLocation)
       ..writeByte(2)

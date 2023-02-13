@@ -38,13 +38,16 @@ class InfoCollector extends StatelessWidget {
               onChanged: (value) {
                 state.setBatchNo = value!;
               }),
-          AppDropdownInput<String>(
-              hintText: 'Please Select Your Faculty',
-              options: state.getFacultyList,
-              value: state.selectedFaculty,
-              onChanged: (value) {
-                state.setFaculty = value!;
-              }),
+          Visibility(
+            visible: state.getFacultyList != [],
+            child: AppDropdownInput<String>(
+                hintText: 'Please Select Your Faculty',
+                options: state.getFacultyList,
+                value: state.selectedFaculty,
+                onChanged: (value) {
+                  state.setFaculty = value!;
+                }),
+          ),
           AppDropdownInput(
               hintText: 'Please Select Your Level',
               options: state.getLevelList,

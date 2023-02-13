@@ -47,6 +47,43 @@ class ParentDb {
       batches[batchIndex].insertFaculty(batch.faculties[0]);
     }
   }
+
+  // ===========================================================================
+  //------------------------Getters---------------------------------------------
+  //============================================================================
+  List<int> get batchList {
+    List<int> tmpList = [];
+    for (var batch in batches) {
+      tmpList.add(batch.batchNo);
+    }
+    return tmpList;
+  }
+
+  List<String> facultyList(int batchNo) {
+    List<String> tmpList = [];
+
+    if (batchNo == null || batchNo < 0) return tmpList;
+
+    final List<Faculty> faculties = getBatchByBatchNo(batchNo).faculties;
+    for (var faculty in faculties) {
+      tmpList.add(faculty.name);
+    }
+    return tmpList;
+  }
+
+  String dbLink({required int batchNo, required String facultyName}) {
+    final dbLocation = getBatchByBatchNo(batchNo)
+        .faculties
+        .firstWhere((element) => element.name == facultyName)
+        .database
+        .dbLocation;
+    return 'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/$dbLocation';
+  }
+
+  Batch getBatchByBatchNo(int batchNo) {
+    return batches.firstWhere((element) => element.batchNo == batchNo,
+        orElse: () => Batch(batchNo: 0, faculties: []));
+  }
 }
 
 class Batch {

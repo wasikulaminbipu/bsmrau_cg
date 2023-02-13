@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 class CalculatorState extends ChangeNotifier {
   bool _initialized = false;
   CoursePlan _coursePlan = CoursePlan(
-    faculty: '',
+    // faculty: '',
     levels: [],
     startCgpa: 0,
     startLocation: CourseLocation(levelIndex: 0, termIndex: 0),

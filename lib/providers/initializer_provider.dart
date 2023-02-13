@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bsmrau_cg/modals/base_data.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
+import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:bsmrau_cg/modals/term_system.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,8 @@ enum Error {
 
 class InitializerState extends ChangeNotifier {
   // late List<String<String>> _bachNoList = [];
-  late List<int> _batchNoList = [];
-  late final List<String> _facultyList = [];
+  // late List<int> _batchNoList = [];
+  // late final List<String> _facultyList = [];
   late final List<String> _levelList = [];
   // List.generate(5, (index) => 'Level $index');
   late final List<String> _termList = [];
@@ -33,6 +34,7 @@ class InitializerState extends ChangeNotifier {
   CoursePlan? _coursePlan;
   late Box<dynamic> _coreDb;
   BaseData? _baseData;
+  ParentDb? _parentDb;
 
   //State Control Variables
   // bool _isError = false;
@@ -47,27 +49,53 @@ class InitializerState extends ChangeNotifier {
 
   void initialize() async {
     if (isInitialized) return;
-
+    // print('Printing');
     isInitialized = true;
 
     //Initialize Database
     _coreDb = Hive.box('coreDb');
 
+    // await http
+    //     .get(Uri.parse(
+    //         'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/1_15_vet.csv'))
+    //     .then((value) => CoursePlan.fromCSV(value.body));
+
     await _recursiveFunctions(
         function: getBaseData,
-        stopCondition: checkBaseDataAvailability,
+        stopCondition: checkParentDbAvailability,
         runAfter: initializeBasicData);
   }
 
+  Future<void> getBaseData() async {
+    if (_parentDb == null) {
+      await http
+          .get(Uri.parse(
+              'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'))
+          .then((value) => {
+                if (value.statusCode == 200)
+                  {
+                    _parentDb = ParentDb.fromCSV(csvString: value.body),
+                    _removeError(Error.downloadError)
+                  }
+                else
+                  {
+                    _registerError(Error.downloadError),
+                    // _baseData = const BaseData(
+                    // totalFaculties: 0, totalBatches: 0, faculties: [])
+                  }
+              });
+    }
+  }
+
   void initializeBasicData() {
-    //Set Batch Data List
-    _batchNoList =
-        List.generate(8, (index) => _baseData!.totalBatches - 6 + index);
+    // //Set Batch Data List
+    // _batchNoList =
+    //     List.generate(8, (index) => _baseData!.totalBatches - 6 + index);
 
     //generate Faculty List
-    for (var faculty in _baseData!.faculties) {
-      _facultyList.add(faculty.name);
-    }
+    // for (var faculty in _baseData!.faculties) {
+    //   _facultyList.add(faculty.name);
+    // }
 
     //generate Term List
     // _levelList.addAll(List.generate(5, (index) => 'Level ${index + 1}'));
@@ -82,10 +110,9 @@ class InitializerState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool checkBaseDataAvailability() {
-    return _baseData != null;
-  }
-
+  //============================================================================
+  //------------------------Private Functions-----------------------------------
+  //============================================================================
   void _registerError(Error error) {
     if (error == _error) return;
 
@@ -140,26 +167,6 @@ class InitializerState extends ChangeNotifier {
     }
   }
 
-  Future<void> getBaseData() async {
-    if (_baseData == null) {
-      await http
-          .get(Uri.parse('https://api.npoint.io/4702f66a9fe254eb6786'))
-          .then((value) => {
-                if (value.statusCode == 200)
-                  {
-                    _baseData = BaseData.fromJson(json.decode(value.body)),
-                    _removeError(Error.downloadError)
-                  }
-                else
-                  {
-                    _registerError(Error.downloadError),
-                    _baseData = const BaseData(
-                        totalFaculties: 0, totalBatches: 0, faculties: [])
-                  }
-              });
-    }
-  }
-
   //============================================================================
   //----------------------Getters are Here--------------------------------------
   //============================================================================
@@ -193,11 +200,11 @@ class InitializerState extends ChangeNotifier {
   }
 
   List<int> get getBatchNoList {
-    return _batchNoList;
+    return _parentDb?.batchList ?? [];
   }
 
   List<String> get getFacultyList {
-    return _facultyList;
+    return _parentDb?.facultyList(selectedBatch) ?? [];
   }
 
   List<String> get getLevelList {
@@ -282,6 +289,32 @@ class InitializerState extends ChangeNotifier {
     return false;
   }
 
+  //============================================================================
+  //---------------------------------Availability Testers-----------------------
+  //============================================================================
+  bool checkParentDbAvailability() {
+    if (_parentDb != null) return true;
+    return false;
+  }
+
+  bool checkCoursePlanAvailability() {
+    return _coursePlan != null;
+  }
+
+  bool checkInputDataAvailability() {
+    if (_coreDb.isNotEmpty &&
+        _coreDb.containsKey('batch') &&
+        _coreDb.containsKey('faculty') &&
+        _coreDb.containsKey('level') &&
+        _coreDb.containsKey('term') &&
+        _coreDb.containsKey('cgpa')) return true;
+    return false;
+  }
+
+  //============================================================================
+  //------------------------------State Finalizers------------------------------
+  //============================================================================
+
   Future<void> save() async {
     if (_stateLoading == false) {
       _stateLoading = true;
@@ -299,20 +332,6 @@ class InitializerState extends ChangeNotifier {
         runAfter: _startCalculator);
   }
 
-  bool checkCoursePlanAvailability() {
-    return _coursePlan != null;
-  }
-
-  bool checkInputDataAvailability() {
-    if (_coreDb.isNotEmpty &&
-        _coreDb.containsKey('batch') &&
-        _coreDb.containsKey('faculty') &&
-        _coreDb.containsKey('level') &&
-        _coreDb.containsKey('term') &&
-        _coreDb.containsKey('cgpa')) return true;
-    return false;
-  }
-
   Future<void> _saveInputData() async {
     await _coreDb.put('batch', _selectedBatch);
     await _coreDb.put('faculty', _selectedFaculty);
@@ -321,36 +340,35 @@ class InitializerState extends ChangeNotifier {
     await _coreDb.put('cgpa', _selectedCGPA);
   }
 
-  Future<void> _prepareDb() async {
-    //get the dbLink from the variables
-    String dbLink = _baseData!.faculties
-        .firstWhere((element) => element.name == _selectedFaculty)
-        .batches
-        .firstWhere((element) =>
-            element.minBatch <= _selectedBatch &&
-            element.maxBatch >= _selectedBatch)
-        .dbLink;
-
-    //Parse the data from internet
-    await http.get(Uri.parse(dbLink)).then((response) => {
-          if (response.statusCode == 200)
-            {
-              _coursePlan =
-                  CoursePlan.fromJson(jsonDecode(response.body.toString())),
-              _coursePlan!.inputInitialData(
-                  level: _selectedLevel,
-                  term: _selectedTerm,
-                  cgpa: _selectedCGPA),
-              saveDb(_coursePlan!),
-              _removeError(Error.databaseError)
-            }
-          else
-            {_registerError(Error.databaseError)}
-        });
-  }
-
   Future<void> _finalizeDatabase() async {
     await _coreDb.put('dataAvailable', true);
+  }
+
+  Future<void> _prepareDb() async {
+    //get the dbLink from the variables
+    String dbLink = _parentDb?.dbLink(
+            batchNo: selectedBatch, facultyName: selectedFaculty) ??
+        '';
+
+    //Parse the data from internet
+    await http
+        .get(Uri.parse(_parentDb?.dbLink(
+                batchNo: selectedBatch, facultyName: selectedFaculty) ??
+            ''))
+        .then((response) => {
+              if (response.statusCode == 200)
+                {
+                  _coursePlan = CoursePlan.fromCSV(response.body.toString()),
+                  _coursePlan!.inputInitialData(
+                      level: _selectedLevel,
+                      term: _selectedTerm,
+                      cgpa: _selectedCGPA),
+                  saveDb(_coursePlan!),
+                  _removeError(Error.databaseError)
+                }
+              else
+                {_registerError(Error.databaseError)}
+            });
   }
 
   void _startCalculator() {

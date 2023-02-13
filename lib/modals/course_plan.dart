@@ -1,11 +1,12 @@
 import 'package:bsmrau_cg/modals/term_system.dart';
+import 'package:csv/csv.dart';
 import 'package:hive/hive.dart';
 part 'course_plan.g.dart';
 
 @HiveType(typeId: 4)
 class CoursePlan extends HiveObject {
-  @HiveField(0)
-  String faculty = '';
+  // @HiveField(0)
+  // String faculty = '';
 
   @HiveField(1)
   CourseLocation startLocation;
@@ -20,7 +21,8 @@ class CoursePlan extends HiveObject {
   List<Level> levels = [];
 
   CoursePlan(
-      {required this.faculty,
+      {
+      // required this.faculty,
       required this.levels,
       required this.startCgpa,
       required this.startLocation,
@@ -38,22 +40,38 @@ class CoursePlan extends HiveObject {
     }
 
     return CoursePlan(
-        faculty: coursePlan['faculty'],
+        // faculty: coursePlan['faculty'],
         levels: tmpLevels,
         startCgpa: 0.00,
         startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
         currentLocation: CourseLocation(levelIndex: 0, termIndex: 0));
   }
 
-  // factory CoursePlan.fromCSV(String csvString) {
+  factory CoursePlan.fromCSV(String csvString) {
+    //Convert CSV String to List
+    List<List<dynamic>> csvData = const CsvToListConverter()
+        .convert(csvString, fieldDelimiter: ',', eol: '\n');
 
-  //   return CoursePlan(
-  //       faculty: coursePlan['faculty'],
-  //       levels: tmpLevels,
-  //       startCgpa: 0.00,
-  //       startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
-  //       currentLocation: CourseLocation(levelIndex: 0, termIndex: 0));
-  // }
+    CoursePlan coursePlan = CoursePlan(
+        // faculty: facultyName,
+        levels: [],
+        startCgpa: 0.00,
+        startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
+        currentLocation: CourseLocation(levelIndex: 0, termIndex: 0));
+
+    for (var elements in csvData) {
+      final credits = (double.tryParse(elements[4].toString()) ?? 0.00) +
+          (double.tryParse(elements[5].toString()) ?? 0.00);
+
+      coursePlan.insertLevel(
+          levelName: elements[0] ?? '',
+          termName: elements[1] ?? '',
+          courseName: '${elements[2]}: ${elements[3]}',
+          credits: credits);
+    }
+
+    return coursePlan;
+  }
 
   //-----------------------------------------------------------------------------
   //----------------Input Type Methods-------------------------------------------
@@ -192,6 +210,34 @@ class CoursePlan extends HiveObject {
     return tmpTotalCredits > 0 ? tmpTotalPoints / tmpTotalCredits : 0;
   }
 
+  //============================================================================
+  //----------------------------Functions---------------------------------------
+  //============================================================================
+
+  void insertLevel(
+      {required String levelName,
+      required String termName,
+      required String courseName,
+      required double credits}) {
+    int index = getLevelIndex(levelName);
+
+    if (index < 0) {
+      levels.add(Level(name: levelName, terms: []));
+      index = getLevelIndex(levelName);
+    }
+
+    levels[index].insertCourse(
+        termName: termName, courseName: courseName, credits: credits);
+  }
+
+  int getLevelIndex(String levelName) {
+    int index = -1;
+    for (int i = 0; i < levels.length; i++) {
+      if (levels[i].name == levelName) index = i;
+    }
+    return index;
+  }
+
   //-----------------------------------------------------------------------------
   //--------------------------------Private Methods------------------------------
   //-----------------------------------------------------------------------------
@@ -216,7 +262,7 @@ class CoursePlan extends HiveObject {
 
   @override
   String toString() {
-    return '{ faculty: $faculty, totalCredits: $totalCredits, levels: $levels, startLocation: $startLocation, currentLocation: $currentLocation, startCgpa: $startCgpa}, ';
+    return '{totalCredits: $totalCredits, levels: $levels, startLocation: $startLocation, currentLocation: $currentLocation, startCgpa: $startCgpa}, ';
   }
 }
 
@@ -240,6 +286,32 @@ class Level extends HiveObject {
     }
 
     return Level(name: level['name'], terms: tmpTerms);
+  }
+
+  //============================================================================
+  //----------------------------Functions---------------------------------------
+  //============================================================================
+
+  void insertCourse(
+      {required String termName,
+      required String courseName,
+      required double credits}) {
+    int index = getTermIndex(termName);
+
+    if (index < 0) {
+      terms.add(Term(name: termName, courses: []));
+      index = getTermIndex(termName);
+    }
+
+    terms[index].insertCourse(courseName: courseName, credits: credits);
+  }
+
+  int getTermIndex(String termName) {
+    int index = -1;
+    for (int i = 0; i < terms.length; i++) {
+      if (terms[i].name == termName) index = i;
+    }
+    return index;
   }
 
   //-----------------------------------------------------------------------------
@@ -326,6 +398,26 @@ class Term extends HiveObject {
     if (resultGot == courses.length) return true;
     return false;
   }
+
+  //------------------Functions----------------------------------------
+  void insertCourse({required String courseName, required double credits}) {
+    int index = getCourseIndex(courseName);
+
+    index < 0
+        ? courses
+            .add(Course(name: courseName, credits: credits, pointAchieved: -1))
+        : courses[index].credits = credits;
+  }
+
+  int getCourseIndex(String courseName) {
+    int index = -1;
+    for (int i = 0; i < courses.length; i++) {
+      if (courses[i].name == courseName) index = i;
+    }
+    return index;
+  }
+
+  //-----------------Factory Constructors------------------------------
 
   factory Term.fromJson(Map<String, dynamic> term) {
     List<Course> tmpCourses = [];
