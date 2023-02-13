@@ -1,7 +1,7 @@
 # BSMRAU CG 
 ## _Latest Ever CGPA Calculator App for BSMRAU, Bangladesh Students_
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger) [Download Now](https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_4.apk)
+[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger) [Download Now](https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_5.apk)
 
 BSMRAU CG is a ready to use flutter app that can be used both in android and ios in some easy steps. This app is generally created for Bangabandhu Sheikh Mujibur Rahman Agricultural University Students. But this app is based on GNU License 3.0 so anyone can change, edit, distribute the app without any restrictions as long as it is open source. Enjoy the app and Pray for me.
 
@@ -21,11 +21,13 @@ BSMRAU CG is a ready to use flutter app that can be used both in android and ios
 
 **Version Cycle:** 3.0
 
+**Latest Release:** 3.0 alpha 5
+
 **App Engine:** [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev/)
 
 **Programming Language:** [![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
 
-**Online Database Provider:** [Npoint](https://www.npoint.io/)
+**Online Database Provider:** GitHub
 
 **License Type:** GNU Public License 3.0 (You can do anything just your project must be in same license)
 

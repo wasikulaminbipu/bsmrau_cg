@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:bsmrau_cg/modals/base_data.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
 import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:bsmrau_cg/modals/term_system.dart';
@@ -34,7 +32,7 @@ class InitializerState extends ChangeNotifier {
   //Variables after all the input completed
   CoursePlan? _coursePlan;
   late Box<dynamic> _coreDb;
-  BaseData? _baseData;
+  // BaseData? _baseData;
   ParentDb? _parentDb;
 
   //State Control Variables
