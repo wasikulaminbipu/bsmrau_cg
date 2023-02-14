@@ -72,6 +72,7 @@ class CoursePlan extends HiveObject {
     return coursePlan;
   }
 
+  //TODO: Set for major update where all arrays can be updated
   void update(String csvCoursePlan) {
     final newPlan = CoursePlan.fromCSV(csvCoursePlan);
 
