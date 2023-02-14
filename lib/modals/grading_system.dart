@@ -43,3 +43,10 @@ abstract class GradingSystem {
     return -1.00;
   }
 }
+
+class GradeSlap {
+  String grade;
+  double point;
+
+  GradeSlap({required this.grade, required this.point});
+}

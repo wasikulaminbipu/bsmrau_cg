@@ -1,6 +1,9 @@
 import 'package:bsmrau_cg/modals/course_plan.dart';
+import 'package:bsmrau_cg/modals/parent_db.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 
 class CalculatorState extends ChangeNotifier {
   bool _initialized = false;
@@ -116,5 +119,49 @@ class CalculatorState extends ChangeNotifier {
   void prevTerm() {
     _coursePlan.previousTerm();
     notifyListeners();
+  }
+
+  //============================================================================
+  //-----------------------------Other Functions--------------------------------
+  //============================================================================
+  void checkForDbUpdate() async {
+    final int batchNo = await _coreDb.get('batch');
+    final String facultyName = await _coreDb.get('faculty');
+    final int currentDbVersion = await _coreDb.get('db_version');
+    late final ParentDb parentDb;
+    ConnectivityResult connectivityResult =
+        await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.wifi &&
+        connectivityResult != ConnectivityResult.mobile) {
+      await http
+          .get(Uri.parse(
+              'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'))
+          .then((value) => {
+                if (value.statusCode == 200)
+                  {
+                    parentDb = ParentDb.fromCSV(csvString: value.body),
+                    if (parentDb.dbVersion(
+                            batchNo: batchNo, facultyName: facultyName) >
+                        currentDbVersion)
+                      {
+                        updateCoursePlan(
+                            dbLink: parentDb.dbLink(
+                                batchNo: batchNo, facultyName: facultyName))
+                      }
+                  }
+              });
+    }
+  }
+
+  void updateCoursePlan({required String dbLink}) async {
+    ConnectivityResult connectivityResult =
+        await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.wifi &&
+        connectivityResult != ConnectivityResult.mobile) {
+      //Parse the data from internet
+      await http.get(Uri.parse(dbLink)).then((response) => {
+            if (response.statusCode == 200) {_coursePlan.update(response.body)}
+          });
+    }
   }
 }

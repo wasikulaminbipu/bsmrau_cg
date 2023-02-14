@@ -72,6 +72,36 @@ class CoursePlan extends HiveObject {
     return coursePlan;
   }
 
+  void update(String csvCoursePlan) {
+    final newPlan = CoursePlan.fromCSV(csvCoursePlan);
+
+    for (var i = 0; i < newPlan.levels.length; i++) {
+      var level = newPlan.levels[i];
+      //Update the level name if correction available
+      if (level.name != levels[i].name) {
+        levels[i].name = level.name;
+      }
+      for (var j = 0; j < level.terms.length; j++) {
+        var term = level.terms[j];
+        //Update the term name if correction available
+        if (term.name != levels[i].terms[j].name) {
+          levels[i].terms[j].name = term.name;
+        }
+        for (var k = 0; k < term.courses.length; k++) {
+          var course = term.courses[k];
+          //Update the course name if correction available
+          if (course.name != levels[i].terms[j].courses[k].name) {
+            levels[i].terms[j].courses[k].name = course.name;
+          }
+          //Update the course name if correction available
+          if (course.credits != levels[i].terms[j].courses[k].credits) {
+            levels[i].terms[j].courses[k].credits = course.credits;
+          }
+        }
+      }
+    }
+  }
+
   //-----------------------------------------------------------------------------
   //----------------Input Type Methods-------------------------------------------
   //-----------------------------------------------------------------------------
@@ -170,9 +200,11 @@ class CoursePlan extends HiveObject {
   }
 
   String get currentTerm {
-    String name =
-        '${levels[currentLocation.levelIndex].name} : ${levels[currentLocation.levelIndex].terms[currentLocation.termIndex]}';
-
+    String name = '';
+    if (currentLocation != null && levels.length > currentLocation.levelIndex) {
+      name =
+          '${levels[currentLocation.levelIndex].name} : ${levels[currentLocation.levelIndex].terms[currentLocation.termIndex].name}';
+    }
     return name;
   }
 

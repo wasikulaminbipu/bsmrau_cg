@@ -306,6 +306,7 @@ class InitializerState extends ChangeNotifier {
         _coreDb.containsKey('faculty') &&
         _coreDb.containsKey('level') &&
         _coreDb.containsKey('term') &&
+        _coreDb.containsKey('db_version') &&
         _coreDb.containsKey('cgpa')) return true;
     return false;
   }
