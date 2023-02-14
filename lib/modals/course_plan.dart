@@ -100,6 +100,7 @@ class CoursePlan extends HiveObject {
         }
       }
     }
+    print("Updated");
     save();
   }
 

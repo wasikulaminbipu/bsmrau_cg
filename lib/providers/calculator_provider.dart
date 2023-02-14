@@ -156,11 +156,12 @@ class CalculatorState extends ChangeNotifier {
   void updateCoursePlan({required String dbLink}) async {
     ConnectivityResult connectivityResult =
         await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.wifi &&
-        connectivityResult != ConnectivityResult.mobile) {
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
       //Parse the data from internet
       await http.get(Uri.parse(dbLink)).then((response) => {
-            if (response.statusCode == 200) {_coursePlan.update(response.body)}
+            if (response.statusCode == 200)
+              {_coursePlan.update(response.body), print("Initiated Update")}
           });
     }
     _coursePlan = await _coreDb.get('coursePlan')!;
