@@ -80,6 +80,15 @@ class ParentDb {
     return 'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/$dbLocation';
   }
 
+  int dbVersion({required int batchNo, required String facultyName}) {
+    final dbVersion = getBatchByBatchNo(batchNo)
+        .faculties
+        .firstWhere((element) => element.name == facultyName)
+        .database
+        .version;
+    return dbVersion;
+  }
+
   Batch getBatchByBatchNo(int batchNo) {
     return batches.firstWhere((element) => element.batchNo == batchNo,
         orElse: () => Batch(batchNo: 0, faculties: []));

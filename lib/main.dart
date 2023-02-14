@@ -32,7 +32,6 @@ Future<void> initializeDb() async {
 }
 
 Future<void> importCSV() async {
-  print('Running');
   final value = await http.get(Uri.parse(
       'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'));
   ParentDb.fromCSV(csvString: value.body.toString());

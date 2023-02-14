@@ -16,7 +16,8 @@ class ContactsSection extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(onPressed: state.contactCall, child: Icon(Icons.call)),
+          ElevatedButton(
+              onPressed: state.contactCall, child: const Icon(Icons.call)),
           const SizedBox(
             width: 10.0,
           ),

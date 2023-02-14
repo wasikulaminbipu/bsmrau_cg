@@ -1,4 +1,3 @@
-import 'package:bsmrau_cg/modals/term_system.dart';
 import 'package:csv/csv.dart';
 import 'package:hive/hive.dart';
 part 'course_plan.g.dart';
@@ -84,7 +83,7 @@ class CoursePlan extends HiveObject {
     startLocation = _getIndex(term: term, level: level);
     startCgpa = cgpa;
     currentLocation = startLocation;
-    // save();
+    save();
   }
 
   //This method is created for setting the achieved point
@@ -136,6 +135,28 @@ class CoursePlan extends HiveObject {
   //-----------------------------------------------------------------------------
 
   //This getter is created for getting current term data availble
+  List<String> get levelsList {
+    List<String> tmpLevels = [];
+
+    for (var level in levels) {
+      if (!tmpLevels.contains(level.name)) tmpLevels.add(level.name);
+    }
+
+    return tmpLevels;
+  }
+
+  List<String> get termsList {
+    List<String> tmpTerms = [];
+
+    for (var level in levels) {
+      for (var term in level.terms) {
+        if (!tmpTerms.contains(term.name)) tmpTerms.add(term.name);
+      }
+    }
+
+    return tmpTerms;
+  }
+
   List<Course> get currentCourses {
     return levels[currentLocation.levelIndex]
         .terms[currentLocation.termIndex]
@@ -150,7 +171,8 @@ class CoursePlan extends HiveObject {
 
   String get currentTerm {
     String name =
-        '${TermSystem.findLevel(currentLocation.levelIndex)} : ${TermSystem.findTerm(currentLocation.termIndex)}';
+        '${levels[currentLocation.levelIndex].name} : ${levels[currentLocation.levelIndex].terms[currentLocation.termIndex]}';
+
     return name;
   }
 

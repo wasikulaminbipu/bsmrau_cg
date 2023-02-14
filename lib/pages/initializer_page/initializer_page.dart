@@ -1,10 +1,8 @@
 import 'package:bsmrau_cg/pages/initializer_page/info_collector.dart';
-import 'package:bsmrau_cg/providers/initializer_provider.dart';
 import 'package:bsmrau_cg/widgets/contact_section.dart';
 import 'package:bsmrau_cg/widgets/view_card.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class InitializerPage extends StatelessWidget {
   const InitializerPage({super.key});
@@ -21,16 +19,10 @@ class InitializerPage extends StatelessWidget {
             'assets/animations/initializer.zip',
             frameRate: FrameRate.max,
           ),
-          // SizedBox(
-          //   height: MediaQuery.of(context).size.height * 0.06,
-          // ),
           //Main Box
           const ViewCard(
             child: InfoCollector(),
           ),
-          // SizedBox(
-          //   height: MediaQuery.of(context).size.height * 0.06,
-          // ),
           const SizedBox(
             height: 20.0,
           ),

@@ -1,6 +1,5 @@
 import 'package:bsmrau_cg/modals/course_plan.dart';
 import 'package:bsmrau_cg/modals/parent_db.dart';
-import 'package:bsmrau_cg/modals/term_system.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -19,9 +18,9 @@ class InitializerState extends ChangeNotifier {
   // late List<String<String>> _bachNoList = [];
   // late List<int> _batchNoList = [];
   // late final List<String> _facultyList = [];
-  late final List<String> _levelList = [];
+  // late final List<String> _levelList = [];
   // List.generate(5, (index) => 'Level $index');
-  late final List<String> _termList = [];
+  // late final List<String> _termList = [];
 
   late int _selectedBatch = 0;
   late String _selectedFaculty = '';
@@ -40,6 +39,7 @@ class InitializerState extends ChangeNotifier {
   bool _isReady = false;
   bool _stateLoading = true;
   bool isInitialized = false;
+  bool _isDbAvailable = false;
   Error _error = Error.noError;
 
   //============================================================================
@@ -53,11 +53,6 @@ class InitializerState extends ChangeNotifier {
 
     //Initialize Database
     _coreDb = Hive.box('coreDb');
-
-    // await http
-    //     .get(Uri.parse(
-    //         'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/1_15_vet.csv'))
-    //     .then((value) => CoursePlan.fromCSV(value.body));
 
     await _recursiveFunctions(
         function: getBaseData,
@@ -98,10 +93,10 @@ class InitializerState extends ChangeNotifier {
 
     //generate Term List
     // _levelList.addAll(List.generate(5, (index) => 'Level ${index + 1}'));
-    _levelList.addAll(TermSystem.levels);
+    // _levelList.addAll(TermSystem.levels);
 
     //generate Level List
-    _termList.addAll(TermSystem.terms);
+    // _termList.addAll(TermSystem.terms);
 
     isInitialized = true;
     _stateLoading = false;
@@ -178,6 +173,8 @@ class InitializerState extends ChangeNotifier {
     return _stateLoading;
   }
 
+  bool get isDbAvailable => _isDbAvailable;
+
   bool get isError {
     return _error != Error.noError;
   }
@@ -207,11 +204,11 @@ class InitializerState extends ChangeNotifier {
   }
 
   List<String> get getLevelList {
-    return _levelList;
+    return _coursePlan?.levelsList ?? [];
   }
 
   List<String> get getTermList {
-    return _termList;
+    return _coursePlan?.termsList ?? [];
   }
 
   String get stateProgressText {
@@ -243,10 +240,6 @@ class InitializerState extends ChangeNotifier {
 
   set setFaculty(String facultyName) {
     _selectedFaculty = facultyName;
-
-    if (facultyName != 'Veterinary Medicine' && _levelList.length == 5) {
-      _levelList.removeAt(4);
-    }
     notifyListeners();
   }
 
@@ -277,6 +270,13 @@ class InitializerState extends ChangeNotifier {
   }
 
   bool isFormCompleted() {
+    if (_selectedBatch > 0 && _selectedFaculty.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isStateFormCompleted() {
     if (_selectedBatch > 0 &&
         _selectedFaculty.isNotEmpty &&
         _selectedLevel.isNotEmpty &&
@@ -321,14 +321,26 @@ class InitializerState extends ChangeNotifier {
     }
 
     await _recursiveFunctions(
+        function: _prepareDb,
+        stopCondition: checkCoursePlanAvailability,
+        runAfter: _startStageDataCollection);
+  }
+
+  Future<void> finalize() async {
+    if (_stateLoading == false) {
+      _stateLoading = true;
+      notifyListeners();
+    }
+
+    _updateStageData();
+
+    await _recursiveFunctions(
         function: _saveInputData,
         stopCondition: checkInputDataAvailability,
         runAfter: _finalizeDatabase);
 
-    await _recursiveFunctions(
-        function: _prepareDb,
-        stopCondition: checkCoursePlanAvailability,
-        runAfter: _startCalculator);
+    _isReady = true;
+    notifyListeners();
   }
 
   Future<void> _saveInputData() async {
@@ -337,6 +349,11 @@ class InitializerState extends ChangeNotifier {
     await _coreDb.put('level', _selectedLevel);
     await _coreDb.put('term', _selectedTerm);
     await _coreDb.put('cgpa', _selectedCGPA);
+    await _coreDb.put(
+        'db_version',
+        _parentDb?.dbVersion(
+                batchNo: _selectedBatch, facultyName: _selectedFaculty) ??
+            0);
   }
 
   Future<void> _finalizeDatabase() async {
@@ -350,30 +367,39 @@ class InitializerState extends ChangeNotifier {
         '';
 
     //Parse the data from internet
-    await http
-        .get(Uri.parse(_parentDb?.dbLink(
-                batchNo: selectedBatch, facultyName: selectedFaculty) ??
-            ''))
-        .then((response) => {
-              if (response.statusCode == 200)
-                {
-                  _coursePlan = CoursePlan.fromCSV(response.body.toString()),
-                  _coursePlan!.inputInitialData(
-                      level: _selectedLevel,
-                      term: _selectedTerm,
-                      cgpa: _selectedCGPA),
-                  saveDb(_coursePlan!),
-                  _removeError(Error.databaseError)
-                }
-              else
-                {_registerError(Error.databaseError)}
-            });
+    await http.get(Uri.parse(dbLink)).then((response) => {
+          if (response.statusCode == 200)
+            {
+              _coursePlan = CoursePlan.fromCSV(response.body.toString()),
+              saveDb(_coursePlan!),
+              _removeError(Error.databaseError)
+            }
+          else
+            {_registerError(Error.databaseError)}
+        });
   }
 
-  void _startCalculator() {
-    _isReady = true;
+  void _startStageDataCollection() {
+    _stateLoading = false;
+    _isDbAvailable = true;
     notifyListeners();
   }
+
+  void _updateStageData() {
+    try {
+      _coursePlan!.inputInitialData(
+          level: _selectedLevel, term: _selectedTerm, cgpa: _selectedCGPA);
+
+      _removeError(Error.databaseError);
+    } catch (e) {
+      _registerError(Error.databaseError);
+    }
+  }
+
+  // void _startCalculator() {
+  //   _isReady = true;
+  //   notifyListeners();
+  // }
 
   void saveDb(CoursePlan coursePlan) {
     _coreDb.put('coursePlan', coursePlan);
