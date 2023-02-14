@@ -24,7 +24,7 @@ class CalculatorState extends ChangeNotifier {
       _coursePlan = _coreDb.get('coursePlan')!;
       _initialized = true;
     }
-
+    checkForDbUpdate();
     Future.delayed(Duration.zero, () => notifyListeners());
   }
 
@@ -131,8 +131,8 @@ class CalculatorState extends ChangeNotifier {
     late final ParentDb parentDb;
     ConnectivityResult connectivityResult =
         await (Connectivity().checkConnectivity());
-    if (connectivityResult != ConnectivityResult.wifi &&
-        connectivityResult != ConnectivityResult.mobile) {
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
       await http
           .get(Uri.parse(
               'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'))
@@ -163,5 +163,8 @@ class CalculatorState extends ChangeNotifier {
             if (response.statusCode == 200) {_coursePlan.update(response.body)}
           });
     }
+    _coursePlan = await _coreDb.get('coursePlan')!;
+    notifyListeners();
+    print('done');
   }
 }
