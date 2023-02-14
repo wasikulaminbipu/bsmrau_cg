@@ -128,7 +128,10 @@ class CalculatorState extends ChangeNotifier {
     final int batchNo = await _coreDb.get('batch');
     final String facultyName = await _coreDb.get('faculty');
     final int currentDbVersion = await _coreDb.get('db_version');
+
     late final ParentDb parentDb;
+    late final onlineDbVersion;
+
     ConnectivityResult connectivityResult =
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.wifi ||
@@ -140,13 +143,14 @@ class CalculatorState extends ChangeNotifier {
                 if (value.statusCode == 200)
                   {
                     parentDb = ParentDb.fromCSV(csvString: value.body),
-                    if (parentDb.dbVersion(
-                            batchNo: batchNo, facultyName: facultyName) >
-                        currentDbVersion)
+                    onlineDbVersion = parentDb.dbVersion(
+                        batchNo: batchNo, facultyName: facultyName),
+                    if (onlineDbVersion > currentDbVersion)
                       {
                         updateCoursePlan(
                             dbLink: parentDb.dbLink(
-                                batchNo: batchNo, facultyName: facultyName))
+                                batchNo: batchNo, facultyName: facultyName)),
+                        _coreDb.put('db_version', onlineDbVersion)
                       }
                   }
               });
@@ -166,6 +170,5 @@ class CalculatorState extends ChangeNotifier {
     }
     _coursePlan = await _coreDb.get('coursePlan')!;
     notifyListeners();
-    print('done');
   }
 }
