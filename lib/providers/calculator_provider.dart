@@ -1,9 +1,7 @@
+import 'package:bsmrau_cg/modals/app_constants.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
-import 'package:bsmrau_cg/modals/parent_db.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
 
 class CalculatorState extends ChangeNotifier {
   bool _initialized = false;
@@ -17,27 +15,19 @@ class CalculatorState extends ChangeNotifier {
 
   late Box<dynamic> _coreDb;
 
-  void initialize(BuildContext context) async {
-    bool navNeeded = false;
-
+  void initialize() async {
     if (_initialized) return;
     //check if any data available or push to initializer
     //If No data available nevigate to initializerPage
-    _coreDb = Hive.box('coreDb');
+    _coreDb = Hive.box(AppConstants.dbName);
     if (_coreDb.isNotEmpty &&
-        _coreDb.containsKey('dataAvailable') &&
-        _coreDb.containsKey('coursePlan')) {
-      _coursePlan = _coreDb.get('coursePlan')!;
+        _coreDb.containsKey(AppConstants.dataAvailabilityKey) &&
+        _coreDb.containsKey(AppConstants.coursePlanDbKey)) {
+      _coursePlan = _coreDb.get(AppConstants.coursePlanDbKey)!;
       _initialized = true;
-    } else {
-      navNeeded = true;
     }
 
-    Future.delayed(
-        Duration.zero,
-        () => navNeeded
-            ? Navigator.pushNamed(context, '/init')
-            : notifyListeners());
+    Future.delayed(Duration.zero, () => notifyListeners());
   }
 
   //============================================================================

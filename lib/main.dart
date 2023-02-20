@@ -1,4 +1,5 @@
 //Import Type: Basic Flutter
+import 'package:bsmrau_cg/modals/app_preferences.dart';
 import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/routes.dart';
@@ -12,12 +13,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 //Import Type: Theming
 import 'package:bsmrau_cg/theme.dart';
 //Import Type: Provider
-import 'package:provider/provider.dart';
-import 'package:bsmrau_cg/providers/calculator_provider.dart';
-import 'package:bsmrau_cg/providers/initializer_provider.dart';
-//Import Type: Page
-import 'package:bsmrau_cg/pages/calculator_page/calculator_page.dart';
-import 'package:bsmrau_cg/pages/initializer_page/initializer_page.dart';
 //Import Type: Modals
 import 'package:bsmrau_cg/modals/course_plan.dart';
 
@@ -30,6 +25,7 @@ Future<void> initializeDb() async {
   Hive.registerAdapter(LevelAdapter());
   Hive.registerAdapter(CoursePlanAdapter());
   Hive.registerAdapter(CourseLocationAdapter());
+  Hive.registerAdapter(AppPreferencesAdapter());
   await Hive.openBox('coreDb');
 }
 
@@ -68,7 +64,8 @@ class AppBSMRAUCG extends StatelessWidget {
       title: 'BSMRAU CG',
       theme: lightTheme(),
       darkTheme: darkTheme(),
-      initialRoute: '/',
+      initialRoute:
+          Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init',
       routes: routes,
 // If you do not have a themeMode switch, uncomment this line
 // to let the device system mode control the theme mode:

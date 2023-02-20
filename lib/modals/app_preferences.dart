@@ -1,4 +1,5 @@
 import "package:hive_flutter/hive_flutter.dart";
+part 'app_preferences.g.dart';
 
 @HiveType(typeId: 5)
 class AppPreferences extends HiveObject {
