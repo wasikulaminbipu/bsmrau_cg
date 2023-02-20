@@ -285,14 +285,11 @@ class InitializerState extends ChangeNotifier {
   }
 
   bool checkInputDataAvailability() {
-    if (_coreDb.isNotEmpty &&
-        _coreDb.containsKey('batch') &&
-        _coreDb.containsKey('faculty') &&
-        _coreDb.containsKey('level') &&
-        _coreDb.containsKey('term') &&
-        _coreDb.containsKey('db_version') &&
-        _coreDb.containsKey('cgpa')) return true;
-    return false;
+    return _coreDb.isNotEmpty &&
+            _coreDb.containsKey(AppConstants.preferenceDbKey) &&
+            _coreDb.containsKey(AppConstants.coursePlanDbKey)
+        ? true
+        : false;
   }
 
   //============================================================================
@@ -339,6 +336,8 @@ class InitializerState extends ChangeNotifier {
         0;
     _appPreferences.apiVersion = _appReleases?.latestVersion ?? 1.0;
     _appPreferences.pauseUpdateUpto = _appPreferences.apiVersion;
+
+    await _coreDb.put(AppConstants.preferenceDbKey, _appPreferences);
   }
 
   Future<void> _finalizeDatabase() async {
@@ -383,7 +382,6 @@ class InitializerState extends ChangeNotifier {
 
   void saveDb() {
     _coreDb.put(AppConstants.coursePlanDbKey, _coursePlan);
-    _coreDb.put(AppConstants.preferenceDbKey, _appPreferences);
   }
 
   //========================================================================

@@ -12,7 +12,10 @@ class CustomAlertDialogue extends StatelessWidget {
     return AlertDialog(
       title: const Text("Alert! "),
       content: Text(details),
-      actions: [ElevatedButton(onPressed: onPressed, child: const Text('OK'))],
+      actions: [
+        ElevatedButton(
+            onPressed: () => Navigator.pop(context), child: const Text('OK'))
+      ],
     );
   }
 }

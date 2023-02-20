@@ -6,7 +6,6 @@ import 'package:hive/hive.dart';
 class CalculatorState extends ChangeNotifier {
   bool _initialized = false;
   CoursePlan _coursePlan = CoursePlan(
-    // faculty: '',
     levels: [],
     startCgpa: 0,
     startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
@@ -25,6 +24,8 @@ class CalculatorState extends ChangeNotifier {
         _coreDb.containsKey(AppConstants.coursePlanDbKey)) {
       _coursePlan = _coreDb.get(AppConstants.coursePlanDbKey)!;
       _initialized = true;
+    } else {
+      print(false);
     }
 
     Future.delayed(Duration.zero, () => notifyListeners());

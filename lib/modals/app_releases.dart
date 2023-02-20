@@ -55,4 +55,19 @@ class AppRelease {
   factory AppRelease.zero() {
     return AppRelease(updateLevel: 0, apiVersion: 0, source: '');
   }
+
+  String get releaseType {
+    String type = '';
+    switch (updateLevel) {
+      case 3:
+        type = 'Severe';
+        break;
+      case 2:
+        type = 'Moderate';
+        break;
+      default:
+        type = 'Normal';
+    }
+    return type;
+  }
 }

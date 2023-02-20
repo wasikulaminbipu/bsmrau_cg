@@ -34,8 +34,8 @@ class CourseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<CalculatorState>().initialize();
     context.read<PreferenceState>().initialize();
+    context.read<CalculatorState>().initialize();
 
     final int courseCount =
         context.select<CalculatorState, int>((value) => value.courses.length);

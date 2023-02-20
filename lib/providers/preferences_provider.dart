@@ -12,29 +12,34 @@ class PreferenceState extends ChangeNotifier {
   double apiVersion = 0.00;
   int dbVersion = 0;
 
-  late final Box<dynamic> _coreDb;
+  final Box<dynamic> _coreDb = Hive.box(AppConstants.dbName);
 
   AppPreferences _appPreferences = AppPreferences.zero();
   AppRelease _appUpdate = AppRelease.zero();
 
   bool _initialized = false;
+
   void initialize() {
     if (_initialized) return;
-    _coreDb = Hive.box(AppConstants.dbName);
     if (_coreDb.containsKey(AppConstants.dataAvailabilityKey)) {
       _appPreferences =
           _coreDb.get(AppConstants.preferenceDbKey) ?? AppPreferences.zero();
+
+      checkForAppUpdate();
+      checkForDbUpdate();
       _initialized = true;
     }
-
-    checkForAppUpdate();
-    checkForDbUpdate();
     Future.delayed(Duration.zero, () => notifyListeners());
   }
 
   //============================================================================
   //-----------------------------Getters----------------------------------------
   //============================================================================
+  bool get showAppUpdateDialogue => _appUpdate != null;
+  String get appLink => _appUpdate.source;
+  String get releaseType => _appUpdate.releaseType;
+  bool get showAvoidButton => _appUpdate.updateLevel < 2;
+  bool get showBackButton => _appUpdate.updateLevel < 3;
 
   //============================================================================
   //-----------------------------Other Functions--------------------------------
@@ -81,8 +86,10 @@ class PreferenceState extends ChangeNotifier {
                         dbLink: parentDb.dbLink(
                             batchNo: _appPreferences.batchNo,
                             facultyName: _appPreferences.faculty)),
-                    _appPreferences.update(dbVersion: onlineDbVersion)
+                    _appPreferences.update(dbVersion: onlineDbVersion),
                   }
+                else
+                  {print('done')}
               }
           });
     }
