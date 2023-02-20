@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomAlertDialogue extends StatelessWidget {
-  const CustomAlertDialogue(
-      {super.key, required this.details, required this.onPressed});
+  const CustomAlertDialogue({super.key, required this.details});
 
   final String details;
-  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {

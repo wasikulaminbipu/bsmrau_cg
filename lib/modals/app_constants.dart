@@ -15,7 +15,13 @@ abstract class AppConstants {
   static const String rawDbUrl = '$rawUrl/db/';
   static const String parentDbUrl = '$rawDbUrl/parent_db.csv';
   static const String releasesDbUrl = '$rawDbUrl/app_releases.csv';
-
+  //============================================================================
+  //--------------------------Warning Related----------------------------------
+  //============================================================================
+  static const String prevTermWarning =
+      'Navigation to Previous Term is not allowed. You have provided initial data upto previous term.';
+  static const String nextTermWarning =
+      'Navigation to Next Term is not allowed. Please provide all the course result first.';
   //============================================================================
   //--------------------------Contacts Related----------------------------------
   //============================================================================

@@ -59,6 +59,14 @@ class CalculatorState extends ChangeNotifier {
     return _coursePlan.showPrevButton;
   }
 
+  bool get allowNextTerm => _coursePlan.termFinished;
+
+  bool get allowPrevTerm => _coursePlan.prevTermEditable;
+
+  // bool get allowPrevTerm{
+
+  // }
+
   String get termName {
     return _coursePlan.currentTerm;
   }

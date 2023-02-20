@@ -239,6 +239,12 @@ class CoursePlan extends HiveObject {
         : true;
   }
 
+  bool get termFinished => levels[currentLocation.levelIndex]
+      .terms[currentLocation.termIndex]
+      .allResultPublished;
+
+  bool get prevTermEditable => currentLocation == startLocation;
+
   double get totalCredits {
     double tmpTotalCredits = 0.00;
 
