@@ -1,3 +1,6 @@
+import 'package:bsmrau_cg/modals/app_constants.dart';
+import 'package:bsmrau_cg/modals/app_preferences.dart';
+import 'package:bsmrau_cg/modals/app_releases.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
 import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -15,13 +18,6 @@ enum Error {
 }
 
 class InitializerState extends ChangeNotifier {
-  // late List<String<String>> _bachNoList = [];
-  // late List<int> _batchNoList = [];
-  // late final List<String> _facultyList = [];
-  // late final List<String> _levelList = [];
-  // List.generate(5, (index) => 'Level $index');
-  // late final List<String> _termList = [];
-
   late int _selectedBatch = 0;
   late String _selectedFaculty = '';
   late String _selectedLevel = '';
@@ -30,9 +26,11 @@ class InitializerState extends ChangeNotifier {
 
   //Variables after all the input completed
   CoursePlan? _coursePlan;
+  AppPreferences _appPreferences = AppPreferences.zero();
   late Box<dynamic> _coreDb;
   // BaseData? _baseData;
   ParentDb? _parentDb;
+  AppReleases? _appReleases;
 
   //State Control Variables
   // bool _isError = false;
@@ -62,42 +60,28 @@ class InitializerState extends ChangeNotifier {
 
   Future<void> getBaseData() async {
     if (_parentDb == null) {
-      await http
-          .get(Uri.parse(
-              'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'))
-          .then((value) => {
-                if (value.statusCode == 200)
-                  {
-                    _parentDb = ParentDb.fromCSV(csvString: value.body),
-                    _removeError(Error.downloadError)
-                  }
-                else
-                  {
-                    _registerError(Error.downloadError),
-                    // _baseData = const BaseData(
-                    // totalFaculties: 0, totalBatches: 0, faculties: [])
-                  }
-              });
+      await http.get(Uri.parse(AppConstants.parentDbUrl)).then((value) => {
+            if (value.statusCode == 200)
+              {
+                _parentDb = ParentDb.fromCSV(csvString: value.body),
+                _removeError(Error.downloadError)
+              }
+            else
+              {_registerError(Error.downloadError)}
+          });
+      await http.get(Uri.parse(AppConstants.releasesDbUrl)).then((value) => {
+            if (value.statusCode == 200)
+              {
+                _appReleases = AppReleases.fromCSV(value.body),
+                _removeError(Error.downloadError)
+              }
+            else
+              {_registerError(Error.downloadError)}
+          });
     }
   }
 
   void initializeBasicData() {
-    // //Set Batch Data List
-    // _batchNoList =
-    //     List.generate(8, (index) => _baseData!.totalBatches - 6 + index);
-
-    //generate Faculty List
-    // for (var faculty in _baseData!.faculties) {
-    //   _facultyList.add(faculty.name);
-    // }
-
-    //generate Term List
-    // _levelList.addAll(List.generate(5, (index) => 'Level ${index + 1}'));
-    // _levelList.addAll(TermSystem.levels);
-
-    //generate Level List
-    // _termList.addAll(TermSystem.terms);
-
     isInitialized = true;
     _stateLoading = false;
 
@@ -345,20 +329,20 @@ class InitializerState extends ChangeNotifier {
   }
 
   Future<void> _saveInputData() async {
-    await _coreDb.put('batch', _selectedBatch);
-    await _coreDb.put('faculty', _selectedFaculty);
-    await _coreDb.put('level', _selectedLevel);
-    await _coreDb.put('term', _selectedTerm);
-    await _coreDb.put('cgpa', _selectedCGPA);
-    await _coreDb.put(
-        'db_version',
-        _parentDb?.dbVersion(
-                batchNo: _selectedBatch, facultyName: _selectedFaculty) ??
-            0);
+    _appPreferences.batchNo = _selectedBatch;
+    _appPreferences.faculty = _selectedFaculty;
+    _appPreferences.level = _selectedLevel;
+    _appPreferences.term = _selectedTerm;
+    _appPreferences.startCgpa = _selectedCGPA;
+    _appPreferences.dbVersion = _parentDb?.dbVersion(
+            batchNo: _selectedBatch, facultyName: _selectedFaculty) ??
+        0;
+    _appPreferences.apiVersion = _appReleases?.latestVersion ?? 1.0;
+    _appPreferences.pauseUpdateUpto = _appPreferences.apiVersion;
   }
 
   Future<void> _finalizeDatabase() async {
-    await _coreDb.put('dataAvailable', true);
+    await _coreDb.put(AppConstants.dataAvailabilityKey, true);
   }
 
   Future<void> _prepareDb() async {
@@ -372,7 +356,7 @@ class InitializerState extends ChangeNotifier {
           if (response.statusCode == 200)
             {
               _coursePlan = CoursePlan.fromCSV(response.body.toString()),
-              saveDb(_coursePlan!),
+              saveDb(),
               _removeError(Error.databaseError)
             }
           else
@@ -397,28 +381,24 @@ class InitializerState extends ChangeNotifier {
     }
   }
 
-  // void _startCalculator() {
-  //   _isReady = true;
-  //   notifyListeners();
-  // }
-
-  void saveDb(CoursePlan coursePlan) {
-    _coreDb.put('coursePlan', coursePlan);
+  void saveDb() {
+    _coreDb.put(AppConstants.coursePlanDbKey, _coursePlan);
+    _coreDb.put(AppConstants.preferenceDbKey, _appPreferences);
   }
 
   //========================================================================
   //------------------------------------Contact Methods---------------------
   //========================================================================
   Future<void> contactMessage() async {
-    await launchUrl(Uri.parse('sms:+8801521439342'));
+    await launchUrl(Uri.parse('sms:${AppConstants.phone}'));
   }
 
   Future<void> contactCall() async {
-    await launchUrl(Uri.parse('tel:+8801521439342'));
+    await launchUrl(Uri.parse('tel:${AppConstants.phone}'));
   }
 
   Future<void> contactMail() async {
     await launchUrl(Uri.parse(
-        'mailto: wasikulaminbipu@gmail.com?subject=BSMRAU CG App Update&body=Please Update the app. I cant find my database'));
+        'mailto: ${AppConstants.mail}?subject=${AppConstants.mailSubject}&body=${AppConstants.mailBody}'));
   }
 }

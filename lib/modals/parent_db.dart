@@ -17,7 +17,8 @@ class ParentDb {
       Faculty faculty;
       faculty = Faculty(
           name: data[1],
-          database: Database(dbLocation: data[3], version: data[2]));
+          database: Database(
+              dbLocation: data[3], version: double.parse(data[2].toString())));
       parentDb.insertBatch(Batch(batchNo: data[0], faculties: [faculty]));
     }
 
@@ -80,7 +81,7 @@ class ParentDb {
     return 'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/$dbLocation';
   }
 
-  int dbVersion({required int batchNo, required String facultyName}) {
+  double dbVersion({required int batchNo, required String facultyName}) {
     final dbVersion = getBatchByBatchNo(batchNo)
         .faculties
         .firstWhere((element) => element.name == facultyName)
@@ -130,7 +131,7 @@ class Faculty {
 
 class Database {
   String dbLocation;
-  int version;
+  double version;
 
   Database({required this.dbLocation, required this.version});
 }

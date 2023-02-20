@@ -4,9 +4,6 @@ part 'course_plan.g.dart';
 
 @HiveType(typeId: 4)
 class CoursePlan extends HiveObject {
-  // @HiveField(0)
-  // String faculty = '';
-
   @HiveField(0)
   CourseLocation startLocation;
 
@@ -20,9 +17,7 @@ class CoursePlan extends HiveObject {
   List<Level> levels = [];
 
   CoursePlan(
-      {
-      // required this.faculty,
-      required this.levels,
+      {required this.levels,
       required this.startCgpa,
       required this.startLocation,
       required this.currentLocation});
@@ -72,36 +67,51 @@ class CoursePlan extends HiveObject {
     return coursePlan;
   }
 
-  //TODO: Set for major update where all arrays can be updated
   void update(String csvCoursePlan) {
-    final newPlan = CoursePlan.fromCSV(csvCoursePlan);
+    final newPlan = CoursePlan.fromCSV(csvCoursePlan).levels;
+    final oldPlan = levels;
 
-    for (var i = 0; i < newPlan.levels.length; i++) {
-      var level = newPlan.levels[i];
+    //check if the plan has new levels
+    for (var i = 0; i < levels.length; i++) {
+      if (newPlan.length - 1 < i) break;
       //Update the level name if correction available
-      if (level.name != levels[i].name) {
-        levels[i].name = level.name;
-      }
-      for (var j = 0; j < level.terms.length; j++) {
-        var term = level.terms[j];
+      for (var j = 0; j < levels[i].terms.length; j++) {
+        if (newPlan[i].terms.length - 1 < j) break;
         //Update the term name if correction available
-        if (term.name != levels[i].terms[j].name) {
-          levels[i].terms[j].name = term.name;
-        }
-        for (var k = 0; k < term.courses.length; k++) {
-          var course = term.courses[k];
+        for (var k = 0; k < levels[i].terms[j].courses.length; k++) {
+          if (levels[i].terms[j].courses[k].pointAchieved < 0) break;
+
+          bool updated = false;
+
+          //Iterate Over all the courses and check if same course name is found
+          //If match found then update the achieved point of newPlan
           //Update the course name if correction available
-          if (course.name != levels[i].terms[j].courses[k].name) {
-            levels[i].terms[j].courses[k].name = course.name;
+          for (var p = 0; p < newPlan[i].terms[j].courses.length; p++) {
+            if (newPlan[i].terms[j].courses[p].name.trim().toLowerCase() ==
+                levels[i].terms[j].courses[p].name.trim().toLowerCase()) {
+              newPlan[i].terms[j].courses[p].pointAchieved =
+                  levels[i].terms[j].courses[k].pointAchieved;
+              updated = true;
+            }
           }
-          //Update the course name if correction available
-          if (course.credits != levels[i].terms[j].courses[k].credits) {
-            levels[i].terms[j].courses[k].credits = course.credits;
+
+          //Check whether the point is updated
+          //check whether the newPlan has enough courses
+          //Check whether the index is empty
+
+          if (!updated &&
+              newPlan[i].terms[j].courses.length - 1 >= k &&
+              newPlan[i].terms[j].courses[k].pointAchieved < 0) {
+            //Update achieved point assuming that it is the same course and
+            //course name has changed
+            newPlan[i].terms[j].courses[k].pointAchieved =
+                levels[i].terms[j].courses[k].pointAchieved;
           }
         }
       }
     }
-    print("Updated");
+
+    levels = newPlan;
     save();
   }
 
@@ -242,10 +252,11 @@ class CoursePlan extends HiveObject {
     double tmpTotalCredits = 0.00;
     double tmpTotalPoints = 0.00;
 
+    //Make sure that for loop go through all the levels and all the terms
     //Loop over all the levels available upto current level
-    for (var i = 0; i <= currentLocation.levelIndex; i++) {
+    for (var i = 0; i < levels.length; i++) {
       //Loop over all the terms available upto current term
-      for (var j = 0; j <= currentLocation.termIndex; j++) {
+      for (var j = 0; j < levels[i].terms.length; j++) {
         var data = levels[i].terms[j];
 
         //Check If current location is before the start Loc      ation
@@ -254,8 +265,8 @@ class CoursePlan extends HiveObject {
           //When its before the start Location
           tmpTotalCredits += data.totalCredits;
           tmpTotalPoints += (startCgpa * data.totalCredits);
-        } else {
-          // print(startCgpa);
+        } else if (i < currentLocation.levelIndex ||
+            i == currentLocation.levelIndex && j <= currentLocation.termIndex) {
           //When its in start location or further
           tmpTotalCredits += data.workingCredits;
           tmpTotalPoints += (data.workingCredits * data.gpa);
@@ -418,7 +429,7 @@ class Term extends HiveObject {
     double credits = 0.00;
 
     for (var course in courses) {
-      if (course.isUsed) credits += course.credits;
+      credits += course.calculatableCredits;
     }
 
     return credits;
@@ -430,18 +441,16 @@ class Term extends HiveObject {
     double tmpTotalPoint = 0.00;
 
     for (var course in courses) {
-      if (course.isUsed) {
-        tmpTotalCredit += course.credits;
-        tmpTotalPoint += course.credits * course.pointAchieved;
-      }
+      tmpTotalCredit += course.calculatableCredits;
+      tmpTotalPoint += course.calculatableTotalPoints;
     }
 
     return tmpTotalCredit == 0 ? 0.0 : tmpTotalPoint / tmpTotalCredit;
   }
 
-  int get totalCourses {
-    return courses.length;
-  }
+  // double get calculatableGpa => allResultPublished ? gpa : 0;
+
+  int get totalCourses => courses.length;
 
   int get resultGot {
     int courseCount = 0;
@@ -516,10 +525,13 @@ class Course extends HiveObject {
   }
 
   //=========Getters=======================
-  bool get isUsed {
-    if (pointAchieved < 0) return false;
-    return true;
-  }
+  bool get isUsed => pointAchieved < 0 ? false : true;
+
+  double get calculatableCredits => isUsed ? credits : 0.00;
+
+  double get calculatableAchievedPoints => isUsed ? pointAchieved : 0.00;
+
+  double get calculatableTotalPoints => isUsed ? credits * pointAchieved : 0.00;
 
   //=========Override Methods=================
 

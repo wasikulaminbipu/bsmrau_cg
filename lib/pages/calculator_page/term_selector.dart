@@ -1,5 +1,6 @@
 import 'package:bsmrau_cg/providers/calculator_provider.dart';
 import 'package:bsmrau_cg/widgets/action_button.dart';
+import 'package:bsmrau_cg/widgets/alert_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,13 @@ class TermSelector extends StatelessWidget {
               child: Text(termName)),
           ActionButton(
             icon: Icons.skip_next,
-            onPressed: state.showNextButton ? () => state.nextTerm() : null,
+            onPressed: () => showDialog(
+                context: context,
+                builder: (_) => CustomAlertDialogue(
+                      details: '',
+                      onPressed: () {},
+                    )),
+            // onPressed: state.showNextButton ? () => state.nextTerm() : null,
           )
         ],
       ),

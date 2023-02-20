@@ -1,5 +1,6 @@
 import 'package:bsmrau_cg/pages/calculator_page/calculator_page.dart';
 import 'package:bsmrau_cg/providers/calculator_provider.dart';
+import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/widgets/dropdown_input.dart';
 import 'package:bsmrau_cg/providers/initializer_provider.dart';
 import 'package:bsmrau_cg/widgets/progress_viewer.dart';
@@ -16,14 +17,8 @@ class InfoCollector extends StatelessWidget {
     final state = context.watch<InitializerState>();
     state.initialize();
 
-    Future.delayed(Duration.zero, () {
-      if (state.isReady) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider(
-                create: (_) => CalculatorState(),
-                builder: (context, child) => const CalculatorPage())));
-      }
-    });
+    Future.delayed(Duration.zero,
+        () => {if (state.isReady) Navigator.pushNamed(context, '/')});
 
     return Visibility(
       visible: !state.isStateLoading,

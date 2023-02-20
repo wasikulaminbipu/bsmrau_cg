@@ -13,6 +13,8 @@ abstract class GradingSystem {
     {'grade': 'None', 'point': -1.00},
   ];
 
+  static final List<GradeSlap> gradingN = [];
+
   static Map<String, dynamic> getGrading(int index) {
     return grading[index];
   }
@@ -42,6 +44,8 @@ abstract class GradingSystem {
     }
     return -1.00;
   }
+
+  static void initiateGrading(String csvString) {}
 }
 
 class GradeSlap {

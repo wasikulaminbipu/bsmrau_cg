@@ -17,15 +17,27 @@ class CalculatorState extends ChangeNotifier {
 
   late Box<dynamic> _coreDb;
 
-  void initialize() async {
+  void initialize(BuildContext context) async {
+    bool navNeeded = false;
+
     if (_initialized) return;
+    //check if any data available or push to initializer
+    //If No data available nevigate to initializerPage
     _coreDb = Hive.box('coreDb');
-    if (_coreDb.containsKey('coursePlan')) {
+    if (_coreDb.isNotEmpty &&
+        _coreDb.containsKey('dataAvailable') &&
+        _coreDb.containsKey('coursePlan')) {
       _coursePlan = _coreDb.get('coursePlan')!;
       _initialized = true;
+    } else {
+      navNeeded = true;
     }
-    checkForDbUpdate();
-    Future.delayed(Duration.zero, () => notifyListeners());
+
+    Future.delayed(
+        Duration.zero,
+        () => navNeeded
+            ? Navigator.pushNamed(context, '/init')
+            : notifyListeners());
   }
 
   //============================================================================
@@ -118,57 +130,6 @@ class CalculatorState extends ChangeNotifier {
 
   void prevTerm() {
     _coursePlan.previousTerm();
-    notifyListeners();
-  }
-
-  //============================================================================
-  //-----------------------------Other Functions--------------------------------
-  //============================================================================
-  void checkForDbUpdate() async {
-    final int batchNo = await _coreDb.get('batch');
-    final String facultyName = await _coreDb.get('faculty');
-    final int currentDbVersion = await _coreDb.get('db_version');
-
-    late final ParentDb parentDb;
-    late final onlineDbVersion;
-
-    ConnectivityResult connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile) {
-      await http
-          .get(Uri.parse(
-              'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'))
-          .then((value) => {
-                if (value.statusCode == 200)
-                  {
-                    parentDb = ParentDb.fromCSV(csvString: value.body),
-                    onlineDbVersion = parentDb.dbVersion(
-                        batchNo: batchNo, facultyName: facultyName),
-                    if (onlineDbVersion > currentDbVersion)
-                      {
-                        updateCoursePlan(
-                            dbLink: parentDb.dbLink(
-                                batchNo: batchNo, facultyName: facultyName)),
-                        _coreDb.put('db_version', onlineDbVersion)
-                      }
-                  }
-              });
-    }
-  }
-
-  void updateCoursePlan({required String dbLink}) async {
-    ConnectivityResult connectivityResult =
-        await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile) {
-      //Parse the data from internet
-      await http.get(Uri.parse(dbLink)).then((response) => {
-            if (response.statusCode == 200)
-              {_coursePlan.update(response.body), print("Initiated Update")}
-          });
-    }
-    _coursePlan = await _coreDb.get('coursePlan')!;
     notifyListeners();
   }
 }

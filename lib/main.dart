@@ -1,5 +1,7 @@
 //Import Type: Basic Flutter
 import 'package:bsmrau_cg/modals/parent_db.dart';
+import 'package:bsmrau_cg/providers/preferences_provider.dart';
+import 'package:bsmrau_cg/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,17 +68,22 @@ class AppBSMRAUCG extends StatelessWidget {
       title: 'BSMRAU CG',
       theme: lightTheme(),
       darkTheme: darkTheme(),
+      initialRoute: '/',
+      routes: routes,
 // If you do not have a themeMode switch, uncomment this line
 // to let the device system mode control the theme mode:
 // themeMode: ThemeMode.system,
 
-      home: Hive.box('coreDb').containsKey('dataAvailable')
-          ? ChangeNotifierProvider(
-              create: (_) => CalculatorState(),
-              builder: (context, child) => const CalculatorPage())
-          : ChangeNotifierProvider(
-              create: (_) => InitializerState(),
-              builder: (context, child) => const InitializerPage()),
+      // home: Visibility(
+      //   visible: Hive.box('coreDb').containsKey('dataAvailable'),
+      //   replacement: ChangeNotifierProvider(
+      //       create: (_) => InitializerState(),
+      //       builder: (context, child) => const InitializerPage()),
+      //   child: MultiProvider(providers: [
+      //     ChangeNotifierProvider(create: (_) => PreferenceState()),
+      //     ChangeNotifierProvider(create: (_) => CalculatorState())
+      //   ], builder: (context, child) => const CalculatorPage()),
+      // ),
     );
   }
 }
