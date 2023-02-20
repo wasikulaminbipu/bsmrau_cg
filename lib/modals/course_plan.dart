@@ -46,6 +46,8 @@ class CoursePlan extends HiveObject {
     List<List<dynamic>> csvData = const CsvToListConverter()
         .convert(csvString, fieldDelimiter: ',', eol: '\n');
 
+    csvData = csvData.sublist(1);
+
     CoursePlan coursePlan = CoursePlan(
         // faculty: facultyName,
         levels: [],

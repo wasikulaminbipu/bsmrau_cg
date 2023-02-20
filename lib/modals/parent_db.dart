@@ -9,8 +9,9 @@ class ParentDb {
     ParentDb parentDb = ParentDb(batches: []);
 
     //Convert CSV String to List
-    List<dynamic> csvData = const CsvToListConverter()
+    List<List<dynamic>> csvData = const CsvToListConverter()
         .convert(csvString, fieldDelimiter: ',', eol: '\n');
+    csvData = csvData.sublist(1);
 
     //Read all the list and complete the batches
     for (var data in csvData) {
