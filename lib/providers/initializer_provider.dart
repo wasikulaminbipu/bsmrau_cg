@@ -238,7 +238,7 @@ class InitializerState extends ChangeNotifier {
   }
 
   set setCGPA(String cgpa) {
-    _selectedCGPA = double.parse(cgpa.trim());
+    _selectedCGPA = double.tryParse(cgpa.trim()) ?? 0.00;
     notifyListeners();
   }
 
