@@ -17,6 +17,7 @@ import 'package:bsmrau_cg/modals/course_plan.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 Future<void> initializeDb() async {
   await Hive.initFlutter();
@@ -69,16 +70,17 @@ class AppBSMRAUCG extends StatelessWidget {
         builder: (context, __) {
           context.read<PreferenceState>().initialize();
 
-          final themeMode = context
-              .select<PreferenceState, ThemeMode>((value) => value.themMode);
+          final stateData =
+              context.select<PreferenceState, Tuple2<ThemeMode, String>>(
+                  (value) => Tuple2<ThemeMode, String>(
+                      value.themMode, value.initialRoute));
           return MaterialApp(
             title: 'BSMRAU CG',
             theme: lightTheme(),
             darkTheme: darkTheme(),
-            initialRoute:
-                Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init',
+            themeMode: stateData.item1,
+            initialRoute: stateData.item2,
             routes: routes,
-            themeMode: themeMode,
           );
         });
   }

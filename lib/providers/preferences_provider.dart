@@ -41,7 +41,8 @@ class PreferenceState extends ChangeNotifier {
   bool get showAvoidButton => _appUpdate.updateLevel < 2;
   bool get showBackButton => _appUpdate.updateLevel < 3;
   ThemeMode get themMode => ThemeMode.values[_appPreferences.themModeIndex];
-
+  String get initialRoute =>
+      Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
   //============================================================================
   //-----------------------------Other Functions--------------------------------
   //============================================================================
