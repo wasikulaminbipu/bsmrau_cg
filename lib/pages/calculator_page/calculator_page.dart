@@ -1,11 +1,8 @@
-import 'package:bsmrau_cg/modals/app_preferences.dart';
 import 'package:bsmrau_cg/pages/calculator_page/calculator_counter.dart';
 import 'package:bsmrau_cg/pages/calculator_page/term_selector.dart';
 import 'package:bsmrau_cg/providers/calculator_provider.dart';
-import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/widgets/subject_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 class CalculatorPage extends StatelessWidget {
@@ -34,7 +31,6 @@ class CourseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<PreferenceState>().initialize();
     context.read<CalculatorState>().initialize();
 
     final int courseCount =

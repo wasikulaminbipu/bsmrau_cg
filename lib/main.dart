@@ -41,11 +41,9 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   //Database
   await initializeDb();
-  await importCSV();
 
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('google_fonts/OFL.txt');
-    print(license);
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
