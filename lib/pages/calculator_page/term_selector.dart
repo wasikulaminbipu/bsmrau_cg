@@ -32,8 +32,8 @@ class TermSelector extends StatelessWidget {
         children: [
           ActionButton(
             icon: Icons.skip_previous,
-            onPressed: state.showNextButton
-                ? (allowNextTerm
+            onPressed: state.showPrevButton
+                ? (allowPrevTerm
                     ? state.prevTerm
                     : () => showDialog(
                         context: context,
