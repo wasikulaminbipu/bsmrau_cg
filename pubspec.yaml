@@ -85,6 +85,7 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
+    - assets/google_fonts/
 
 flutter_icons:
   android: "launcher_icon"

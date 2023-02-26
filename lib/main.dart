@@ -12,11 +12,11 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 //Import Type: Theming
 import 'package:bsmrau_cg/theme.dart';
-//Import Type: Provider
 //Import Type: Modals
 import 'package:bsmrau_cg/modals/course_plan.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 Future<void> initializeDb() async {
   await Hive.initFlutter();
@@ -49,7 +49,11 @@ void main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(const AppBSMRAUCG());
+    runApp(ChangeNotifierProvider(
+        create: (_) => PreferenceState(),
+        builder: (_, __) {
+          return const AppBSMRAUCG();
+        }));
     FlutterNativeSplash.remove();
   });
 }
@@ -60,6 +64,7 @@ class AppBSMRAUCG extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    context.read<PreferenceState>().initialize();
     return MaterialApp(
       title: 'BSMRAU CG',
       theme: lightTheme(),
@@ -67,20 +72,7 @@ class AppBSMRAUCG extends StatelessWidget {
       initialRoute:
           Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init',
       routes: routes,
-// If you do not have a themeMode switch, uncomment this line
-// to let the device system mode control the theme mode:
-// themeMode: ThemeMode.system,
-
-      // home: Visibility(
-      //   visible: Hive.box('coreDb').containsKey('dataAvailable'),
-      //   replacement: ChangeNotifierProvider(
-      //       create: (_) => InitializerState(),
-      //       builder: (context, child) => const InitializerPage()),
-      //   child: MultiProvider(providers: [
-      //     ChangeNotifierProvider(create: (_) => PreferenceState()),
-      //     ChangeNotifierProvider(create: (_) => CalculatorState())
-      //   ], builder: (context, child) => const CalculatorPage()),
-      // ),
+      themeMode: ThemeMode.dark,
     );
   }
 }
