@@ -25,13 +25,14 @@ class AppPreferencesAdapter extends TypeAdapter<AppPreferences> {
       apiVersion: fields[0] == null ? 1.0 : fields[0] as double,
       dbVersion: fields[1] == null ? 1 : fields[1] as double,
       pauseUpdateUpto: fields[7] == null ? 1.0 : fields[7] as double,
+      themModeIndex: fields[8] == null ? 0 : fields[8] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppPreferences obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.apiVersion)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class AppPreferencesAdapter extends TypeAdapter<AppPreferences> {
       ..writeByte(6)
       ..write(obj.startCgpa)
       ..writeByte(7)
-      ..write(obj.pauseUpdateUpto);
+      ..write(obj.pauseUpdateUpto)
+      ..writeByte(8)
+      ..write(obj.themModeIndex);
   }
 
   @override

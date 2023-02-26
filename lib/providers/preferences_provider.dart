@@ -40,6 +40,7 @@ class PreferenceState extends ChangeNotifier {
   String get releaseType => _appUpdate.releaseType;
   bool get showAvoidButton => _appUpdate.updateLevel < 2;
   bool get showBackButton => _appUpdate.updateLevel < 3;
+  ThemeMode get themMode => ThemeMode.values[_appPreferences.themModeIndex];
 
   //============================================================================
   //-----------------------------Other Functions--------------------------------

@@ -5,10 +5,10 @@ import 'package:bsmrau_cg/providers/initializer_provider.dart';
 import 'package:provider/provider.dart';
 
 final routes = {
-  '/': (context) => ChangeNotifierProvider(
+  '/': (context) => ChangeNotifierProvider<CalculatorState>(
       create: (_) => CalculatorState(),
       builder: (_, __) => const CalculatorPage()),
-  '/init': (_) => ChangeNotifierProvider(
-      create: (_) => InitializerState(),
-      builder: (_, __) => const InitializerPage()),
+  '/init': (context) => ChangeNotifierProvider<InitializerState>(
+      create: (context) => InitializerState(),
+      builder: (context, __) => const InitializerPage()),
 };
