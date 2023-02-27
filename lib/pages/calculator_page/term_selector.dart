@@ -1,4 +1,4 @@
-import 'package:bsmrau_cg/modals/app_constants.dart';
+import 'package:bsmrau_cg/app_constants.dart';
 import 'package:bsmrau_cg/providers/calculator_provider.dart';
 import 'package:bsmrau_cg/widgets/action_button.dart';
 import 'package:bsmrau_cg/widgets/alert_dialogue.dart';

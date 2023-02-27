@@ -13,7 +13,8 @@ class UpdateDialogue extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('New Version Available'),
-      content: Text('New Version of the app available'),
+      content: Text(
+          'New Version of the app available. Please Download the app and be updated'),
       actions: [
         ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),

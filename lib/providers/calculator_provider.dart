@@ -1,4 +1,4 @@
-import 'package:bsmrau_cg/modals/app_constants.dart';
+import 'package:bsmrau_cg/app_constants.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
