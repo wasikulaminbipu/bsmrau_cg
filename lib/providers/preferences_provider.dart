@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 class PreferenceState extends ChangeNotifier {
   double apiVersion = 0.00;
   int dbVersion = 0;
+  bool showUpdateDialogue = false;
 
   final Box<dynamic> _coreDb = Hive.box(AppConstants.dbName);
 
@@ -44,7 +45,8 @@ class PreferenceState extends ChangeNotifier {
   String get initialRoute =>
       Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
 
-  bool get appUpdatable => _appUpdate != null;
+  bool get appUpdatable =>
+      _appUpdate.apiVersion != AppRelease.zero().apiVersion;
   //============================================================================
   //-----------------------------Other Functions--------------------------------
   //============================================================================
@@ -112,9 +114,16 @@ class PreferenceState extends ChangeNotifier {
                 appReleases = AppReleases.fromCSV(value.body),
                 if (appReleases.latestVersion > _appPreferences.apiVersion &&
                     appReleases.latestVersion > _appPreferences.pauseUpdateUpto)
-                  {_appUpdate = appReleases.latestRelease}
+                  {
+                    _appUpdate = appReleases.latestRelease,
+                  }
               }
           });
     }
+  }
+
+  void remindUpdate() {
+    _appUpdate = AppRelease.zero();
+    notifyListeners();
   }
 }

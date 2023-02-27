@@ -1,7 +1,9 @@
 import 'package:bsmrau_cg/pages/calculator_page/calculator_counter.dart';
 import 'package:bsmrau_cg/pages/calculator_page/term_selector.dart';
 import 'package:bsmrau_cg/providers/calculator_provider.dart';
+import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/widgets/subject_tile.dart';
+import 'package:bsmrau_cg/widgets/update_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +37,9 @@ class CourseList extends StatelessWidget {
 
     final int courseCount =
         context.select<CalculatorState, int>((value) => value.courses.length);
-
+    final bool showUpdateDialog = context
+        .select<PreferenceState, bool>((value) => value.showAppUpdateDialogue);
+    showUpdateDialogue(context: context, condition: showUpdateDialog);
     return Flexible(
       child: ListView.builder(
         padding: const EdgeInsets.all(0.00),
@@ -49,4 +53,14 @@ class CourseList extends StatelessWidget {
       ),
     );
   }
+}
+
+void showUpdateDialogue(
+    {required BuildContext context, bool condition = true}) {
+  if (!condition) return;
+  Future.delayed(Duration.zero, () {
+    showDialog(
+        context: context,
+        builder: (_) => UpdateDialogue(onRemindMe: () {}, onDownload: () {}));
+  });
 }
