@@ -49,11 +49,7 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  runApp(ChangeNotifierProvider(
-      create: (_) => PreferenceState(),
-      builder: (_, __) {
-        return const AppBSMRAUCG();
-      }));
+  runApp(const AppBSMRAUCG());
   FlutterNativeSplash.remove();
 }
 

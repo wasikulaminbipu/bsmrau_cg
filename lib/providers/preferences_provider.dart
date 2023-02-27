@@ -43,6 +43,8 @@ class PreferenceState extends ChangeNotifier {
   ThemeMode get themMode => ThemeMode.values[_appPreferences.themModeIndex];
   String get initialRoute =>
       Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
+
+  bool get appUpdatable => _appUpdate != null;
   //============================================================================
   //-----------------------------Other Functions--------------------------------
   //============================================================================
