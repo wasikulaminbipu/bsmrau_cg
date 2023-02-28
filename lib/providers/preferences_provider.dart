@@ -1,17 +1,23 @@
+import 'dart:io';
+
 import 'package:bsmrau_cg/app_constants.dart';
 import 'package:bsmrau_cg/modals/app_preferences.dart';
 import 'package:bsmrau_cg/modals/app_releases.dart';
 import 'package:bsmrau_cg/modals/course_plan.dart';
+import 'package:bsmrau_cg/modals/downloader.dart';
 import 'package:bsmrau_cg/modals/parent_db.dart';
+import 'package:bsmrau_cg/widgets/update_dialogue.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PreferenceState extends ChangeNotifier {
   double apiVersion = 0.00;
   int dbVersion = 0;
-  bool showUpdateDialogue = false;
 
   final Box<dynamic> _coreDb = Hive.box(AppConstants.dbName);
 
@@ -19,9 +25,17 @@ class PreferenceState extends ChangeNotifier {
   AppRelease _appUpdate = AppRelease.zero();
 
   bool _initialized = false;
+  String path = '';
+  int downloadProgress = 0;
+  Downloader _downloader = Downloader();
 
-  void initialize() {
+  String _id = '';
+  DownloadTaskStatus _status = DownloadTaskStatus.undefined;
+  int _progress = 0;
+
+  void initialize() async {
     if (_initialized) return;
+    _downloader.initialize();
     if (_coreDb.containsKey(AppConstants.dataAvailabilityKey)) {
       _appPreferences =
           _coreDb.get(AppConstants.preferenceDbKey) ?? AppPreferences.zero();
@@ -36,7 +50,6 @@ class PreferenceState extends ChangeNotifier {
   //============================================================================
   //-----------------------------Getters----------------------------------------
   //============================================================================
-  bool get showAppUpdateDialogue => _appUpdate != null;
   String get appLink => _appUpdate.source;
   String get releaseType => _appUpdate.releaseType;
   bool get showAvoidButton => _appUpdate.updateLevel < 2;
@@ -46,7 +59,7 @@ class PreferenceState extends ChangeNotifier {
       Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
 
   bool get appUpdatable =>
-      _appUpdate.apiVersion != AppRelease.zero().apiVersion;
+      _appUpdate.apiVersion == AppRelease.zero().apiVersion;
   //============================================================================
   //-----------------------------Other Functions--------------------------------
   //============================================================================
@@ -94,8 +107,6 @@ class PreferenceState extends ChangeNotifier {
                             facultyName: _appPreferences.faculty)),
                     _appPreferences.update(dbVersion: onlineDbVersion),
                   }
-                else
-                  {print('done')}
               }
           });
     }
@@ -122,8 +133,69 @@ class PreferenceState extends ChangeNotifier {
     }
   }
 
+  //============================================================================
+  //---------------------------Download Related---------------------------------
+  //============================================================================
+  Future<void> _setPath() async {
+    Directory tmpPath = await getApplicationDocumentsDirectory();
+    String localPath = tmpPath.path + Platform.pathSeparator + 'AppReleases';
+    final savedDir = Directory(localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      await savedDir.create();
+      print('done');
+    }
+    path = localPath;
+  }
+
+  Future<void> _installApp() async {}
+
+  void cancelUpdate() {
+    remindUpdate();
+    _appPreferences.pauseUpdateUpto = _appUpdate.apiVersion;
+  }
+
   void remindUpdate() {
     _appUpdate = AppRelease.zero();
+    notifyListeners();
+  }
+
+  Future<void> downloadApp() async {
+    final permissionStatus = await Permission.storage.request();
+
+    if (!permissionStatus.isGranted) return;
+
+    await _setPath();
+
+    _downloader.onChanged = (dynamic data) {
+      _id = data[0];
+      _status = data[1];
+      _progress = data[2];
+      // notifyListeners();
+      print(_progress);
+    };
+
+    await _downloader.download(source: _appUpdate.source, path: path);
+  }
+
+  void showUpdateDialogue({required BuildContext context}) {
+    if (!appUpdatable) return;
+    Future.delayed(Duration.zero, () {
+      showDialog(
+          context: context,
+          builder: (_) => UpdateDialogue(
+              onRemindMe: remindUpdate, onDownload: downloadApp));
+    });
+  }
+
+  //============================================================================
+  //----------------------------------Theme Related-----------------------------
+  //============================================================================
+  void changeTheme() {
+    _appPreferences.update(
+        themeModeIndex: _appPreferences.themModeIndex == 2
+            ? 0
+            : _appPreferences.themModeIndex + 1);
     notifyListeners();
   }
 }

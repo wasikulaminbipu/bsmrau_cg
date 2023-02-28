@@ -1,5 +1,12 @@
 abstract class AppConstants {
   //============================================================================
+  //--------------------------Application Related-------------------------------
+  //============================================================================
+  static const String appName = 'BSMRAU CG';
+  static const String latestReleaseName = 'bsmrau_cg_3.0_alpha_5.apk';
+  static const String parentDbName = 'parent_db.csv';
+  static const String releaseDbName = 'app_releases.csv';
+  //============================================================================
   //--------------------------Database Related----------------------------------
   //============================================================================
   static const String dbName = 'coreDb';
@@ -12,9 +19,11 @@ abstract class AppConstants {
   //============================================================================
   static const String rawUrl =
       'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master';
+  static const String rawDownloadUrl =
+      'https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/';
   static const String rawDbUrl = '$rawUrl/db/';
-  static const String parentDbUrl = '$rawDbUrl/parent_db.csv';
-  static const String releasesDbUrl = '$rawDbUrl/app_releases.csv';
+  static const String parentDbUrl = '$rawDbUrl/$parentDbName';
+  static const String releasesDbUrl = '$rawDbUrl/$releaseDbName';
   //============================================================================
   //--------------------------Warning Related----------------------------------
   //============================================================================

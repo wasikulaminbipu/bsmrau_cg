@@ -42,7 +42,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   http: ^0.13.5
   hive_flutter: ^1.1.0
-  path_provider: ^2.0.11
+  path_provider: ^2.0.13
   flutter_native_splash: ^2.2.16
   flex_color_scheme: ^6.1.1
   connectivity_plus: ^3.0.2
@@ -51,6 +51,9 @@ dependencies:
   tuple: ^2.0.1
   csv: ^5.0.1
   url_launcher: ^6.1.9
+  flutter_downloader: ^1.10.2
+  dio: ^5.0.1
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

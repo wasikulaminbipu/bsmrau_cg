@@ -37,9 +37,9 @@ class CourseList extends StatelessWidget {
 
     final int courseCount =
         context.select<CalculatorState, int>((value) => value.courses.length);
-    final bool showUpdateDialog = context
-        .select<PreferenceState, bool>((value) => value.showAppUpdateDialogue);
-    showUpdateDialogue(context: context, condition: showUpdateDialog);
+
+    context.read<PreferenceState>().showUpdateDialogue(context: context);
+
     return Flexible(
       child: ListView.builder(
         padding: const EdgeInsets.all(0.00),
@@ -53,14 +53,4 @@ class CourseList extends StatelessWidget {
       ),
     );
   }
-}
-
-void showUpdateDialogue(
-    {required BuildContext context, bool condition = true}) {
-  if (!condition) return;
-  Future.delayed(Duration.zero, () {
-    showDialog(
-        context: context,
-        builder: (_) => UpdateDialogue(onRemindMe: () {}, onDownload: () {}));
-  });
 }

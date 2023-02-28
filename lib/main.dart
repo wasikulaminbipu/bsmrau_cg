@@ -3,7 +3,6 @@ import 'package:bsmrau_cg/modals/app_preferences.dart';
 import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/routes.dart';
-import 'package:bsmrau_cg/widgets/update_dialogue.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
