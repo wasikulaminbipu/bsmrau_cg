@@ -39,7 +39,6 @@ dependencies:
   provider: ^6.0.4
   lottie: ^2.0.0
   hive: ^2.2.3
-  animated_text_kit: ^4.2.2
   http: ^0.13.5
   hive_flutter: ^1.1.0
   path_provider: ^2.0.13
@@ -54,7 +53,6 @@ dependencies:
   flutter_downloader: ^1.10.2
   permission_handler: ^10.2.0
   open_filex: ^4.3.2
-  package_info_plus: ^3.0.3
 
 dev_dependencies:
   flutter_test:

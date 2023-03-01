@@ -13,7 +13,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_filex/open_filex.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -45,6 +44,10 @@ class PreferenceState extends ChangeNotifier {
       checkForAppUpdate();
       checkForDbUpdate();
       _initialized = true;
+    }
+    //Adjust app version
+    if (_appPreferences.apiVersion < AppConstants.version) {
+      _appPreferences.update(apiVersion: AppConstants.version);
     }
     Future.delayed(Duration.zero, () => notifyListeners());
   }
@@ -127,9 +130,7 @@ class PreferenceState extends ChangeNotifier {
                 appReleases = AppReleases.fromCSV(value.body),
                 if (appReleases.latestVersion > _appPreferences.apiVersion &&
                     appReleases.latestVersion > _appPreferences.pauseUpdateUpto)
-                  {
-                    _appUpdate = appReleases.latestRelease,
-                  }
+                  {_appUpdate = appReleases.latestRelease, notifyListeners()}
               }
           });
     }
@@ -186,6 +187,7 @@ class PreferenceState extends ChangeNotifier {
     if (!pathExist) return;
     //Open the file in the path
     await OpenFilex.open(filePath);
+    _appPreferences.update(apiVersion: _appUpdate.apiVersion);
   }
 
   void showUpdateDialogue({required BuildContext context}) {

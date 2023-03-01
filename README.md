@@ -1,7 +1,7 @@
 # BSMRAU CG 
 ## _Latest Ever CGPA Calculator App for BSMRAU, Bangladesh Students_
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger) [Download Now](https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_5.apk)
+[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger) [Download Now](https://github.com/wasikulaminbipu/bsmrau_cg/raw/master/apk_releases/bsmrau_cg_3.0_alpha_6.apk)
 
 BSMRAU CG is a ready to use flutter app that can be used both in android and ios in some easy steps. This app is generally created for Bangabandhu Sheikh Mujibur Rahman Agricultural University Students. But this app is based on GNU License 3.0 so anyone can change, edit, distribute the app without any restrictions as long as it is open source. Enjoy the app and Pray for me.
 
@@ -49,6 +49,28 @@ Now, run the flutter app in your device
 ```flutter run android```
 
 Hurrah! You are ready to go...
+
+##Releasing new Version
+**Step I: Update Constants**
+At First change the **AppConstants** in the file named app_constants.dart
+
+**Step II: Build Release File**
+now run the following command to build a release apk file
+```flutter build apk```
+
+**Step III: Copy & Rename File**
+now copy the release file in the folder **app_release** and then rename the file according to the naming convention
+
+**Step IV: Update release db**
+update app_releases.csv file in db folder
+
+**Step V: Update readme file**
+update readme.md file to change the download link
+
+**Step VI: Push the update**
+Push the update to github
+
+Hurrah! You have updated the app successfully
 
 I wish you will use the app and help me to update
 
