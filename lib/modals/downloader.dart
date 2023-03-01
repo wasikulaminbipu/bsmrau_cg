@@ -22,7 +22,7 @@ class Downloader {
     if (_isInitialized) return;
     await FlutterDownloader.initialize(
         debug:
-            true, // optional: set to false to disable printing logs to console (default: true)
+            false, // optional: set to false to disable printing logs to console (default: true)
         ignoreSsl:
             true // option: set to false to disable working with http links (default: false)
         );

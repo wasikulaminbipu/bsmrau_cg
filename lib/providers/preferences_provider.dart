@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_filex/open_filex.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -27,7 +29,7 @@ class PreferenceState extends ChangeNotifier {
   bool _initialized = false;
   String path = '';
   int downloadProgress = 0;
-  Downloader _downloader = Downloader();
+  final Downloader _downloader = Downloader();
 
   String _id = '';
   DownloadTaskStatus _status = DownloadTaskStatus.undefined;
@@ -59,7 +61,7 @@ class PreferenceState extends ChangeNotifier {
       Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
 
   bool get appUpdatable =>
-      _appUpdate.apiVersion == AppRelease.zero().apiVersion;
+      _appUpdate.apiVersion != AppRelease.zero().apiVersion;
   //============================================================================
   //-----------------------------Other Functions--------------------------------
   //============================================================================
@@ -86,7 +88,7 @@ class PreferenceState extends ChangeNotifier {
 
   void checkForDbUpdate() async {
     late final ParentDb parentDb;
-    late final onlineDbVersion;
+    late final double onlineDbVersion;
 
     ConnectivityResult connectivityResult =
         await (Connectivity().checkConnectivity());
@@ -138,17 +140,13 @@ class PreferenceState extends ChangeNotifier {
   //============================================================================
   Future<void> _setPath() async {
     Directory tmpPath = await getApplicationDocumentsDirectory();
-    String localPath = tmpPath.path + Platform.pathSeparator + 'AppReleases';
+    String localPath = '${tmpPath.path}${Platform.pathSeparator}AppReleases';
     final savedDir = Directory(localPath);
     bool hasExisted = await savedDir.exists();
-    if (!hasExisted) {
-      await savedDir.create();
-      print('done');
-    }
+    if (!hasExisted) await savedDir.create();
+
     path = localPath;
   }
-
-  Future<void> _installApp() async {}
 
   void cancelUpdate() {
     remindUpdate();
@@ -171,11 +169,23 @@ class PreferenceState extends ChangeNotifier {
       _id = data[0];
       _status = data[1];
       _progress = data[2];
-      // notifyListeners();
-      print(_progress);
     };
 
+    bool pathExist = await Directory(path).exists();
+
+    if (!pathExist) return;
     await _downloader.download(source: _appUpdate.source, path: path);
+    await installApp();
+  }
+
+  Future<void> installApp() async {
+    //Create the file path
+    String filePath = '$path${Platform.pathSeparator}${_appUpdate.source}';
+    //Check if the path exist. If not exist return
+    bool pathExist = await File(filePath).exists();
+    if (!pathExist) return;
+    //Open the file in the path
+    await OpenFilex.open(filePath);
   }
 
   void showUpdateDialogue({required BuildContext context}) {

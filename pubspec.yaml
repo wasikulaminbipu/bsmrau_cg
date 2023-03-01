@@ -52,8 +52,9 @@ dependencies:
   csv: ^5.0.1
   url_launcher: ^6.1.9
   flutter_downloader: ^1.10.2
-  dio: ^5.0.1
   permission_handler: ^10.2.0
+  open_filex: ^4.3.2
+  package_info_plus: ^3.0.3
 
 dev_dependencies:
   flutter_test:
