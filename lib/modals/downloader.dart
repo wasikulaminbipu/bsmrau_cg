@@ -68,8 +68,8 @@ class Downloader {
       fileName: source,
       headers: {}, // optional: header send with url (auth token etc)
       savedDir: path,
-      showNotification: false,
-      openFileFromNotification: false,
+      showNotification: true,
+      openFileFromNotification: true,
     );
   }
 }
