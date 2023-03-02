@@ -43,13 +43,15 @@ class PreferenceState extends ChangeNotifier {
 
       checkForAppUpdate();
       checkForDbUpdate();
+
+      //Adjust app version
+      if (_appPreferences.apiVersion < AppConstants.version) {
+        _appPreferences.update(apiVersion: AppConstants.version);
+      }
       _initialized = true;
     }
-    //Adjust app version
-    if (_appPreferences.apiVersion < AppConstants.version) {
-      _appPreferences.update(apiVersion: AppConstants.version);
-    }
-    Future.delayed(Duration.zero, () => notifyListeners());
+
+    Future.delayed(Duration.zero, notifyListeners);
   }
 
   //============================================================================
