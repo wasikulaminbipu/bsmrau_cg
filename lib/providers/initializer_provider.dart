@@ -1,7 +1,7 @@
 import 'package:bsmrau_cg/app_constants.dart';
 import 'package:bsmrau_cg/modals/app_preferences.dart';
 import 'package:bsmrau_cg/modals/app_releases.dart';
-import 'package:bsmrau_cg/modals/course_plan.dart';
+import 'package:bsmrau_cg/modals/course_plan/course_plan.dart';
 import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
