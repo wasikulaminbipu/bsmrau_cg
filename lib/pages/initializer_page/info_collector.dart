@@ -1,6 +1,3 @@
-import 'package:bsmrau_cg/pages/calculator_page/calculator_page.dart';
-import 'package:bsmrau_cg/providers/calculator_provider.dart';
-import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/widgets/dropdown_input.dart';
 import 'package:bsmrau_cg/providers/initializer_provider.dart';
 import 'package:bsmrau_cg/widgets/progress_viewer.dart';

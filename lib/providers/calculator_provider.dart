@@ -1,6 +1,5 @@
 import 'package:bsmrau_cg/app_constants.dart';
 import 'package:bsmrau_cg/modals/course_plan/course.dart';
-import 'package:bsmrau_cg/modals/course_plan/course_location.dart';
 import 'package:bsmrau_cg/modals/course_plan/course_plan.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -21,8 +20,6 @@ class CalculatorState extends ChangeNotifier {
         _coreDb.containsKey(AppConstants.coursePlanDbKey)) {
       _coursePlan = _coreDb.get(AppConstants.coursePlanDbKey)!;
       _initialized = true;
-    } else {
-      print(false);
     }
 
     Future.delayed(Duration.zero, () => notifyListeners());

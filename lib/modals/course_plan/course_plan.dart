@@ -11,10 +11,10 @@ class CoursePlan extends HiveObject {
   CourseLocation startLocation;
 
   @HiveField(1)
-  double startCgpa = 0.00;
+  CourseLocation currentLocation;
 
   @HiveField(2)
-  CourseLocation currentLocation;
+  double startCgpa = 0.00;
 
   @HiveField(3)
   List<Level> levels = [];
@@ -37,8 +37,6 @@ class CoursePlan extends HiveObject {
     Map<String, dynamic> coursePlan,
   ) {
     CoursePlan tmpPlan = CoursePlan.zero();
-
-    List<Level> tmpLevels = [];
 
     //Decode all the level files and store it in the temporary variable
     for (var level in coursePlan['levels']) {
@@ -74,7 +72,6 @@ class CoursePlan extends HiveObject {
 
   void update(String csvCoursePlan) {
     final newPlan = CoursePlan.fromCSV(csvCoursePlan).levels;
-    final oldPlan = levels;
 
     //check if the plan has new levels
     for (var i = 0; i < levels.length; i++) {

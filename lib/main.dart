@@ -5,7 +5,6 @@ import 'package:bsmrau_cg/modals/course_plan/course_location.dart';
 import 'package:bsmrau_cg/modals/course_plan/course_plan.dart';
 import 'package:bsmrau_cg/modals/course_plan/level.dart';
 import 'package:bsmrau_cg/modals/course_plan/term.dart';
-import 'package:bsmrau_cg/modals/parent_db.dart';
 import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/routes.dart';
 import 'package:flutter/foundation.dart';
@@ -18,8 +17,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 //Import Type: Theming
 import 'package:bsmrau_cg/theme.dart';
 //Import Type: Modals
-
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 

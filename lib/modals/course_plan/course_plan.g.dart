@@ -18,9 +18,9 @@ class CoursePlanAdapter extends TypeAdapter<CoursePlan> {
     };
     return CoursePlan(
       levels: (fields[3] as List).cast<Level>(),
-      startCgpa: fields[1] as double,
+      startCgpa: fields[2] as double,
       startLocation: fields[0] as CourseLocation,
-      currentLocation: fields[2] as CourseLocation,
+      currentLocation: fields[1] as CourseLocation,
     );
   }
 
@@ -31,9 +31,9 @@ class CoursePlanAdapter extends TypeAdapter<CoursePlan> {
       ..writeByte(0)
       ..write(obj.startLocation)
       ..writeByte(1)
-      ..write(obj.startCgpa)
-      ..writeByte(2)
       ..write(obj.currentLocation)
+      ..writeByte(2)
+      ..write(obj.startCgpa)
       ..writeByte(3)
       ..write(obj.levels);
   }

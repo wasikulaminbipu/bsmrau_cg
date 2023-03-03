@@ -3,7 +3,6 @@ import 'package:bsmrau_cg/pages/calculator_page/term_selector.dart';
 import 'package:bsmrau_cg/providers/calculator_provider.dart';
 import 'package:bsmrau_cg/providers/preferences_provider.dart';
 import 'package:bsmrau_cg/widgets/subject_tile.dart';
-import 'package:bsmrau_cg/widgets/update_dialogue.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
