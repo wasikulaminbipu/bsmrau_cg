@@ -42,18 +42,16 @@ class AppPreferences extends HiveObject {
     required this.themModeIndex,
   });
 
-  factory AppPreferences.zero() {
-    return AppPreferences(
-        batchNo: 0,
-        faculty: '',
-        level: '',
-        term: '',
-        startCgpa: 0.00,
-        apiVersion: 0,
-        dbVersion: 0,
-        pauseUpdateUpto: 0,
-        themModeIndex: 0);
-  }
+  factory AppPreferences.zero() => AppPreferences(
+      batchNo: 0,
+      faculty: '',
+      level: '',
+      term: '',
+      startCgpa: 0.00,
+      apiVersion: 0,
+      dbVersion: 0,
+      pauseUpdateUpto: 0,
+      themModeIndex: 0);
 
   //============================================================================
   //-------------------------Getters------------------------------------------
@@ -82,7 +80,4 @@ class AppPreferences extends HiveObject {
     pauseUpdateUpto = pauseUpdateVersion!;
     save();
   }
-  // bool appUpdateRequired(double version) => apiVersion < version;
-
-  // bool dbUpdateRequired()
 }

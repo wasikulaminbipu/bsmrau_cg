@@ -26,7 +26,7 @@ class InitializerState extends ChangeNotifier {
 
   //Variables after all the input completed
   CoursePlan? _coursePlan;
-  AppPreferences _appPreferences = AppPreferences.zero();
+  AppPreferences? _appPreferences;
   late Box<dynamic> _coreDb;
   // BaseData? _baseData;
   ParentDb? _parentDb;
@@ -326,16 +326,16 @@ class InitializerState extends ChangeNotifier {
   }
 
   Future<void> _saveInputData() async {
-    _appPreferences.batchNo = _selectedBatch;
-    _appPreferences.faculty = _selectedFaculty;
-    _appPreferences.level = _selectedLevel;
-    _appPreferences.term = _selectedTerm;
-    _appPreferences.startCgpa = _selectedCGPA;
-    _appPreferences.dbVersion = _parentDb?.dbVersion(
+    _appPreferences?.batchNo = _selectedBatch;
+    _appPreferences?.faculty = _selectedFaculty;
+    _appPreferences?.level = _selectedLevel;
+    _appPreferences?.term = _selectedTerm;
+    _appPreferences?.startCgpa = _selectedCGPA;
+    _appPreferences?.dbVersion = _parentDb?.dbVersion(
             batchNo: _selectedBatch, facultyName: _selectedFaculty) ??
         0;
-    _appPreferences.apiVersion = _appReleases?.latestVersion ?? 1.0;
-    _appPreferences.pauseUpdateUpto = _appPreferences.apiVersion;
+    _appPreferences?.apiVersion = _appReleases?.latestVersion ?? 1.0;
+    _appPreferences?.pauseUpdateUpto = _appPreferences?.apiVersion ?? 0.00;
 
     await _coreDb.put(AppConstants.preferenceDbKey, _appPreferences);
   }

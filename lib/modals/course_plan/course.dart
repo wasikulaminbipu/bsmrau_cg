@@ -16,12 +16,12 @@ class Course extends HiveObject {
   Course(
       {required this.name, required this.credits, required this.pointAchieved});
 
-  factory Course.fromJson(Map<String, dynamic> course) {
-    return Course(
-        name: course['name'],
-        credits: (course['credits'] as num).toDouble(),
-        pointAchieved: -1);
-  }
+  factory Course.zero() => Course(name: '', credits: 0.00, pointAchieved: 0.00);
+
+  factory Course.fromJson(Map<String, dynamic> course) => Course(
+      name: course['name'],
+      credits: (course['credits'] as num).toDouble(),
+      pointAchieved: -1);
 
   //=========Getters=======================
   bool get isUsed => pointAchieved < 0 ? false : true;
@@ -35,7 +35,6 @@ class Course extends HiveObject {
   //=========Override Methods=================
 
   @override
-  String toString() {
-    return '{ name: $name, credits: $credits, pointAchieved: $pointAchieved }';
-  }
+  String toString() =>
+      '{ name: $name, credits: $credits, pointAchieved: $pointAchieved }';
 }

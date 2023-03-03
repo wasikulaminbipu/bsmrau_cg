@@ -7,12 +7,7 @@ import 'package:hive/hive.dart';
 
 class CalculatorState extends ChangeNotifier {
   bool _initialized = false;
-  CoursePlan _coursePlan = CoursePlan(
-    levels: [],
-    startCgpa: 0,
-    startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
-    currentLocation: CourseLocation(levelIndex: 0, termIndex: 0),
-  );
+  CoursePlan? _coursePlan;
 
   late Box<dynamic> _coreDb;
 
@@ -39,43 +34,35 @@ class CalculatorState extends ChangeNotifier {
 
   List<Course> get courses {
     if (!_initialized) return [];
-    return _coursePlan.currentCourses;
+    return _coursePlan?.currentCourses ?? <Course>[];
   }
 
   double get gpa {
     if (!_initialized) return 0.00;
-    return _coursePlan.currentGPA;
+    return _coursePlan?.currentGPA ?? 0.00;
   }
 
   double get cgpa {
     if (!_initialized) return 0.00;
-    return _coursePlan.cgpa;
+    return _coursePlan?.cgpa ?? 0.00;
   }
 
   //-------------------------State Based Getters--------------------------------
-  bool get showNextButton {
-    return _coursePlan.showNextButton;
-  }
+  bool get showNextButton => _coursePlan?.showNextButton ?? false;
 
-  bool get showPrevButton {
-    return _coursePlan.showPrevButton;
-  }
+  bool get showPrevButton => _coursePlan?.showPrevButton ?? false;
 
-  bool get allowNextTerm => _coursePlan.termFinished;
+  bool get allowNextTerm => _coursePlan?.termFinished ?? false;
 
-  bool get allowPrevTerm => _coursePlan.prevTermEditable;
+  bool get allowPrevTerm => _coursePlan?.prevTermEditable ?? false;
 
   // bool get allowPrevTerm{
 
   // }
 
-  String get termName {
-    return _coursePlan.currentTerm;
-  }
+  String get termName => _coursePlan?.currentTerm ?? '';
 
-  int get totalCourses {
-    return courses.length;
-  }
+  int get totalCourses => courses.length;
 
   int get usedCourses {
     int used = 0;
@@ -115,7 +102,7 @@ class CalculatorState extends ChangeNotifier {
   //============================================================================
 
   void setGrade(int index, double pointAchieved) {
-    _coursePlan.setPointAchieved(
+    _coursePlan?.setPointAchieved(
         courseIndex: index, pointAchieved: pointAchieved);
     notifyListeners();
   }
@@ -125,12 +112,12 @@ class CalculatorState extends ChangeNotifier {
   //============================================================================
 
   void nextTerm() {
-    _coursePlan.nextTerm();
+    _coursePlan?.nextTerm();
     notifyListeners();
   }
 
   void prevTerm() {
-    _coursePlan.previousTerm();
+    _coursePlan?.previousTerm();
     notifyListeners();
   }
 }

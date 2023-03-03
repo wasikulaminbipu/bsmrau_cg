@@ -12,6 +12,10 @@ class CourseLocation extends HiveObject {
 
   CourseLocation({required this.levelIndex, required this.termIndex});
 
+  factory CourseLocation.zero() {
+    return CourseLocation(levelIndex: 0, termIndex: 0);
+  }
+
   @override
   String toString() {
     return "{levelIndex: $levelIndex, termIndex: $termIndex} ";

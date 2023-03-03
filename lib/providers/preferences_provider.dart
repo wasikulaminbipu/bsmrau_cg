@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bsmrau_cg/app_constants.dart';
 import 'package:bsmrau_cg/modals/app_preferences.dart';
 import 'package:bsmrau_cg/modals/app_releases.dart';
@@ -22,8 +21,8 @@ class PreferenceState extends ChangeNotifier {
 
   final Box<dynamic> _coreDb = Hive.box(AppConstants.dbName);
 
-  AppPreferences _appPreferences = AppPreferences.zero();
-  AppRelease _appUpdate = AppRelease.zero();
+  AppPreferences? _appPreferences;
+  AppRelease? _appUpdate;
 
   bool _initialized = false;
   String path = '';
@@ -45,8 +44,8 @@ class PreferenceState extends ChangeNotifier {
       checkForDbUpdate();
 
       //Adjust app version
-      if (_appPreferences.apiVersion < AppConstants.version) {
-        _appPreferences.update(apiVersion: AppConstants.version);
+      if ((_appPreferences?.apiVersion ?? 0.00) < AppConstants.version) {
+        _appPreferences?.update(apiVersion: AppConstants.version);
       }
       _initialized = true;
     }
@@ -57,16 +56,17 @@ class PreferenceState extends ChangeNotifier {
   //============================================================================
   //-----------------------------Getters----------------------------------------
   //============================================================================
-  String get appLink => _appUpdate.source;
-  String get releaseType => _appUpdate.releaseType;
-  bool get showAvoidButton => _appUpdate.updateLevel < 2;
-  bool get showBackButton => _appUpdate.updateLevel < 3;
-  ThemeMode get themMode => ThemeMode.values[_appPreferences.themModeIndex];
+  String get appLink => _appUpdate?.source ?? '';
+  String get releaseType => _appUpdate?.releaseType ?? '';
+  bool get showAvoidButton => (_appUpdate?.updateLevel ?? 2) < 2;
+  bool get showBackButton => (_appUpdate?.updateLevel ?? 0) < 3;
+  ThemeMode get themMode =>
+      ThemeMode.values[_appPreferences?.themModeIndex ?? 0];
   String get initialRoute =>
       Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
 
   bool get appUpdatable =>
-      _appUpdate.apiVersion != AppRelease.zero().apiVersion;
+      _appUpdate?.apiVersion != AppRelease.zero().apiVersion;
   //============================================================================
   //-----------------------------Other Functions--------------------------------
   //============================================================================
@@ -104,15 +104,15 @@ class PreferenceState extends ChangeNotifier {
               {
                 parentDb = ParentDb.fromCSV(csvString: value.body),
                 onlineDbVersion = parentDb.dbVersion(
-                    batchNo: _appPreferences.batchNo,
-                    facultyName: _appPreferences.faculty),
-                if (onlineDbVersion > _appPreferences.dbVersion)
+                    batchNo: _appPreferences?.batchNo ?? 0,
+                    facultyName: _appPreferences?.faculty ?? ''),
+                if (onlineDbVersion > (_appPreferences?.dbVersion ?? 0))
                   {
                     updateCoursePlan(
                         dbLink: parentDb.dbLink(
-                            batchNo: _appPreferences.batchNo,
-                            facultyName: _appPreferences.faculty)),
-                    _appPreferences.update(dbVersion: onlineDbVersion),
+                            batchNo: _appPreferences?.batchNo ?? 0,
+                            facultyName: _appPreferences?.faculty ?? '')),
+                    _appPreferences?.update(dbVersion: onlineDbVersion),
                   }
               }
           });
@@ -130,8 +130,10 @@ class PreferenceState extends ChangeNotifier {
             if (value.statusCode == 200)
               {
                 appReleases = AppReleases.fromCSV(value.body),
-                if (appReleases.latestVersion > _appPreferences.apiVersion &&
-                    appReleases.latestVersion > _appPreferences.pauseUpdateUpto)
+                if (appReleases.latestVersion >
+                        (_appPreferences?.apiVersion ?? 0) &&
+                    appReleases.latestVersion >
+                        (_appPreferences?.pauseUpdateUpto ?? 0))
                   {_appUpdate = appReleases.latestRelease, notifyListeners()}
               }
           });
@@ -153,7 +155,7 @@ class PreferenceState extends ChangeNotifier {
 
   void cancelUpdate() {
     remindUpdate();
-    _appPreferences.pauseUpdateUpto = _appUpdate.apiVersion;
+    _appPreferences?.pauseUpdateUpto = _appUpdate?.apiVersion ?? 0.00;
   }
 
   void remindUpdate() {
@@ -177,19 +179,19 @@ class PreferenceState extends ChangeNotifier {
     bool pathExist = await Directory(path).exists();
 
     if (!pathExist) return;
-    await _downloader.download(source: _appUpdate.source, path: path);
+    await _downloader.download(source: _appUpdate?.source ?? '', path: path);
     await installApp();
   }
 
   Future<void> installApp() async {
     //Create the file path
-    String filePath = '$path${Platform.pathSeparator}${_appUpdate.source}';
+    String filePath = '$path${Platform.pathSeparator}${_appUpdate?.source}';
     //Check if the path exist. If not exist return
     bool pathExist = await File(filePath).exists();
     if (!pathExist) return;
     //Open the file in the path
     await OpenFilex.open(filePath);
-    _appPreferences.update(apiVersion: _appUpdate.apiVersion);
+    _appPreferences?.update(apiVersion: _appUpdate?.apiVersion);
   }
 
   void showUpdateDialogue({required BuildContext context}) {
@@ -206,10 +208,10 @@ class PreferenceState extends ChangeNotifier {
   //----------------------------------Theme Related-----------------------------
   //============================================================================
   void changeTheme() {
-    _appPreferences.update(
-        themeModeIndex: _appPreferences.themModeIndex == 2
+    _appPreferences?.update(
+        themeModeIndex: _appPreferences?.themModeIndex == 2
             ? 0
-            : _appPreferences.themModeIndex + 1);
+            : (_appPreferences?.themModeIndex ?? 0) + 1);
     notifyListeners();
   }
 }

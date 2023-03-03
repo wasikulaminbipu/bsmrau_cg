@@ -9,12 +9,14 @@ class Term extends HiveObject {
   String name = '';
 
   @HiveField(1)
-  List<Course> courses = [];
+  List<Course> courses = <Course>[];
 
   Term({
     required this.name,
     required this.courses,
   });
+
+  factory Term.zero() => Term(name: '', courses: <Course>[]);
 
   //-----------------------------------------------------------------------------
   //-----------------------------Getters-----------------------------------------

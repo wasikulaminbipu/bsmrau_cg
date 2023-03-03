@@ -1,8 +1,8 @@
 import 'package:bsmrau_cg/modals/course_plan/course.dart';
 import 'package:bsmrau_cg/modals/course_plan/course_location.dart';
 import 'package:bsmrau_cg/modals/course_plan/level.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:csv/csv.dart';
-import 'package:hive/hive.dart';
 part 'course_plan.g.dart';
 
 @HiveType(typeId: 4)
@@ -25,23 +25,28 @@ class CoursePlan extends HiveObject {
       required this.startLocation,
       required this.currentLocation});
 
+  factory CoursePlan.zero() {
+    return CoursePlan(
+        levels: <Level>[],
+        startCgpa: 0.00,
+        startLocation: CourseLocation.zero(),
+        currentLocation: CourseLocation.zero());
+  }
+
   factory CoursePlan.fromJson(
     Map<String, dynamic> coursePlan,
   ) {
+    CoursePlan tmpPlan = CoursePlan.zero();
+
     List<Level> tmpLevels = [];
 
     //Decode all the level files and store it in the temporary variable
     for (var level in coursePlan['levels']) {
       Level tmpLevel = Level.fromJson(level);
-      tmpLevels.add(tmpLevel);
+      tmpPlan.levels.add(tmpLevel);
     }
 
-    return CoursePlan(
-        // faculty: coursePlan['faculty'],
-        levels: tmpLevels,
-        startCgpa: 0.00,
-        startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
-        currentLocation: CourseLocation(levelIndex: 0, termIndex: 0));
+    return tmpPlan;
   }
 
   factory CoursePlan.fromCSV(String csvString) {
@@ -51,12 +56,7 @@ class CoursePlan extends HiveObject {
 
     csvData = csvData.sublist(1);
 
-    CoursePlan coursePlan = CoursePlan(
-        // faculty: facultyName,
-        levels: [],
-        startCgpa: 0.00,
-        startLocation: CourseLocation(levelIndex: 0, termIndex: 0),
-        currentLocation: CourseLocation(levelIndex: 0, termIndex: 0));
+    CoursePlan coursePlan = CoursePlan.zero();
 
     for (var elements in csvData) {
       final credits = (double.tryParse(elements[4].toString()) ?? 0.00) +

@@ -25,19 +25,13 @@ import 'package:tuple/tuple.dart';
 
 Future<void> initializeDb() async {
   await Hive.initFlutter();
+  Hive.registerAdapter(CourseLocationAdapter());
   Hive.registerAdapter(CourseAdapter());
   Hive.registerAdapter(TermAdapter());
   Hive.registerAdapter(LevelAdapter());
-  Hive.registerAdapter(CoursePlanAdapter());
-  Hive.registerAdapter(CourseLocationAdapter());
   Hive.registerAdapter(AppPreferencesAdapter());
+  Hive.registerAdapter(CoursePlanAdapter());
   await Hive.openBox('coreDb');
-}
-
-Future<void> importCSV() async {
-  final value = await http.get(Uri.parse(
-      'https://raw.githubusercontent.com/wasikulaminbipu/bsmrau_cg/master/db/parent_db.csv'));
-  ParentDb.fromCSV(csvString: value.body.toString());
 }
 
 void main() async {

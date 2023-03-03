@@ -9,9 +9,11 @@ class Level extends HiveObject {
   String name = '';
 
   @HiveField(1)
-  List<Term> terms = [];
+  List<Term> terms = <Term>[];
 
   Level({required this.name, required this.terms});
+
+  factory Level.zero() => Level(name: '', terms: <Term>[]);
 
   factory Level.fromJson(Map<String, dynamic> level) {
     List<Term> tmpTerms = [];
@@ -65,7 +67,6 @@ class Level extends HiveObject {
   }
 
   @override
-  String toString() {
-    return '{ name: $name, totalCredit: $totalCredits, terms: $terms';
-  }
+  String toString() =>
+      '{ name: $name, totalCredit: $totalCredits, terms: $terms';
 }
