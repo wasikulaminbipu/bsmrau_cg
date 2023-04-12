@@ -334,8 +334,8 @@ class InitializerState extends ChangeNotifier {
     _appPreferences?.dbVersion = _parentDb?.dbVersion(
             batchNo: _selectedBatch, facultyName: _selectedFaculty) ??
         0;
-    _appPreferences?.apiVersion = _appReleases?.latestVersion ?? 1.0;
-    _appPreferences?.pauseUpdateUpto = _appPreferences?.apiVersion ?? 0.00;
+    // _appPreferences?.apiVersion = _appReleases?.latestVersion ?? 1.0;
+    // _appPreferences?.pauseUpdateUpto = _appPreferences?.apiVersion ?? 0.00;
 
     await _coreDb.put(AppConstants.preferenceDbKey, _appPreferences);
   }

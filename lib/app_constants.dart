@@ -2,9 +2,9 @@ abstract class AppConstants {
   //============================================================================
   //--------------------------Application Related-------------------------------
   //============================================================================
-  static const String appName = 'BSMRAU CG';
-  static const double version = 1.1;
-  static const String latestReleaseName = 'bsmrau_cg_3.0_alpha_6.apk';
+  // static const String appName = 'BSMRAU CG';
+  // static const double version = 1.1;
+  // static const String latestReleaseName = 'bsmrau_cg_3.0_alpha_6.apk';
   static const String parentDbName = 'parent_db.csv';
   static const String releaseDbName = 'app_releases.csv';
   //============================================================================

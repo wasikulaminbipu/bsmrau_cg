@@ -22,9 +22,8 @@ class AppPreferencesAdapter extends TypeAdapter<AppPreferences> {
       level: fields[4] as String,
       term: fields[5] as String,
       startCgpa: fields[6] == null ? 0.0 : fields[6] as double,
-      apiVersion: fields[0] == null ? 1.0 : fields[0] as double,
       dbVersion: fields[1] == null ? 1 : fields[1] as double,
-      pauseUpdateUpto: fields[7] == null ? 1.0 : fields[7] as double,
+      pauseUpdateUpto: fields[7] == null ? '0' : fields[7] as String,
       themModeIndex: fields[8] == null ? 0 : fields[8] as int,
     );
   }
@@ -32,9 +31,7 @@ class AppPreferencesAdapter extends TypeAdapter<AppPreferences> {
   @override
   void write(BinaryWriter writer, AppPreferences obj) {
     writer
-      ..writeByte(9)
-      ..writeByte(0)
-      ..write(obj.apiVersion)
+      ..writeByte(8)
       ..writeByte(1)
       ..write(obj.dbVersion)
       ..writeByte(2)

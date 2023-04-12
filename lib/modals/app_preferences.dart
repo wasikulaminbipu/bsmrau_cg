@@ -3,8 +3,8 @@ part 'app_preferences.g.dart';
 
 @HiveType(typeId: 5)
 class AppPreferences extends HiveObject {
-  @HiveField(0, defaultValue: 1.0)
-  double apiVersion = 1.0;
+  // @HiveField(0, defaultValue: 1.0)
+  // double apiVersion = 1.0;
 
   @HiveField(1, defaultValue: 1)
   double dbVersion = 1;
@@ -24,8 +24,8 @@ class AppPreferences extends HiveObject {
   @HiveField(6, defaultValue: 0.00)
   double startCgpa;
 
-  @HiveField(7, defaultValue: 1.0)
-  double pauseUpdateUpto = 1.0;
+  @HiveField(7, defaultValue: '0')
+  String pauseUpdateUpto = '0';
 
   @HiveField(8, defaultValue: 0)
   int themModeIndex = 0;
@@ -36,7 +36,7 @@ class AppPreferences extends HiveObject {
     required this.level,
     required this.term,
     required this.startCgpa,
-    required this.apiVersion,
+    // required this.apiVersion,
     required this.dbVersion,
     required this.pauseUpdateUpto,
     required this.themModeIndex,
@@ -48,9 +48,9 @@ class AppPreferences extends HiveObject {
       level: '',
       term: '',
       startCgpa: 0.00,
-      apiVersion: 0,
+      // apiVersion: 0,
       dbVersion: 0,
-      pauseUpdateUpto: 0,
+      pauseUpdateUpto: '0',
       themModeIndex: 0);
 
   //============================================================================
@@ -61,16 +61,15 @@ class AppPreferences extends HiveObject {
   //-------------------------Functions------------------------------------------
   //============================================================================
   void update(
-      {double? apiVersion,
-      double? dbVersion,
+      {double? dbVersion,
       int? batchNo,
       String? faculty,
       String? level,
       String? term,
       double? startCgpa,
-      double? pauseUpdateVersion,
+      String? pauseUpdateVersion,
       int? themeModeIndex}) {
-    this.apiVersion = apiVersion!;
+    // this.apiVersion = apiVersion!;
     this.dbVersion = dbVersion!;
     this.batchNo = batchNo!;
     this.faculty = faculty!;

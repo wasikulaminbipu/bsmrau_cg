@@ -16,8 +16,10 @@ class AppReleases {
     for (var release in tmpList) {
       tmpReleases.add(AppRelease(
           updateLevel: int.parse(release[0].toString()),
-          apiVersion: double.parse(release[1].toString()),
-          source: release[2].toString()));
+          version: release[1].toString(),
+          buildNumber: release[2].toString(),
+          // apiVersion: double.parse(release[1].toString()),
+          source: release[3].toString()));
     }
 
     return AppReleases(releases: tmpReleases);
@@ -26,34 +28,42 @@ class AppReleases {
   //============================================================================
   //---------------------------Getters------------------------------------------
   //============================================================================
-  AppRelease get latestRelease {
-    AppRelease tmpRelease =
-        AppRelease(updateLevel: 0, apiVersion: 0, source: '');
+  AppRelease get latestRelease => releases.last;
 
-    for (var release in releases) {
-      if (release.apiVersion > tmpRelease.apiVersion) {
-        tmpRelease = release;
-      }
-    }
+  // {
+  //   AppRelease tmpRelease =
+  //       AppRelease(updateLevel: 0, apiVersion: 0, source: '');
 
-    return tmpRelease;
-  }
+  //   for (var release in releases) {
+  //     if (release.apiVersion > tmpRelease.apiVersion) {
+  //       tmpRelease = release;
+  //     }
+  //   }
 
-  double get latestVersion => latestRelease.apiVersion;
+  //   return tmpRelease;
+  // }
+
+  String get latestVersion => latestRelease.version;
+  String get latestBuild => latestRelease.buildNumber;
 }
 
 class AppRelease {
   int updateLevel;
-  double apiVersion;
+  String version;
+  String buildNumber;
+  // double apiVersion;
   String source;
 
   AppRelease(
       {required this.updateLevel,
-      required this.apiVersion,
+      // required this.apiVersion,
+      required this.version,
+      required this.buildNumber,
       required this.source});
 
   factory AppRelease.zero() {
-    return AppRelease(updateLevel: 0, apiVersion: 0, source: '');
+    return AppRelease(
+        updateLevel: 0, version: '0', buildNumber: '0', source: '');
   }
 
   String get releaseType {

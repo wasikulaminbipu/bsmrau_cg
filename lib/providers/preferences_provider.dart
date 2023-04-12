@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class PreferenceState extends ChangeNotifier {
   double apiVersion = 0.00;
@@ -23,6 +24,8 @@ class PreferenceState extends ChangeNotifier {
 
   AppPreferences? _appPreferences;
   AppRelease? _appUpdate;
+
+  PackageInfo? _packageInfo;
 
   bool _initialized = false;
   String path = '';
@@ -36,6 +39,8 @@ class PreferenceState extends ChangeNotifier {
   void initialize() async {
     if (_initialized) return;
     _downloader.initialize();
+    _packageInfo = await PackageInfo.fromPlatform();
+
     if (_coreDb.containsKey(AppConstants.dataAvailabilityKey)) {
       _appPreferences =
           _coreDb.get(AppConstants.preferenceDbKey) ?? AppPreferences.zero();
@@ -44,11 +49,15 @@ class PreferenceState extends ChangeNotifier {
       checkForDbUpdate();
 
       //Adjust app version
-      if ((_appPreferences?.apiVersion ?? 0.00) < AppConstants.version) {
-        _appPreferences?.update(apiVersion: AppConstants.version);
-      }
+      // if ((_appPreferences?.apiVersion ?? 0.00) < AppConstants.version) {
+      //   _appPreferences?.update(apiVersion: AppConstants.version);
+      // }
       _initialized = true;
     }
+    // else {
+    //   _appPreferences?.update(apiVersion: AppConstants.version);
+    //   _appPreferences?.update(pauseUpdateVersion: AppConstants.version);
+    // }
 
     Future.delayed(Duration.zero, notifyListeners);
   }
@@ -65,8 +74,9 @@ class PreferenceState extends ChangeNotifier {
   String get initialRoute =>
       Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
 
-  bool get appUpdatable =>
-      _appUpdate?.apiVersion != AppRelease.zero().apiVersion;
+  //TODO: create the app Updatable when build number changes
+  bool get appUpdatable => _appUpdate?.version != _packageInfo?.version;
+
   //============================================================================
   //-----------------------------Other Functions--------------------------------
   //============================================================================
@@ -130,11 +140,14 @@ class PreferenceState extends ChangeNotifier {
             if (value.statusCode == 200)
               {
                 appReleases = AppReleases.fromCSV(value.body),
-                if (appReleases.latestVersion >
-                        (_appPreferences?.apiVersion ?? 0) &&
-                    appReleases.latestVersion >
-                        (_appPreferences?.pauseUpdateUpto ?? 0))
+                if (appReleases.latestVersion != _packageInfo?.version &&
+                    appReleases.latestVersion != _packageInfo?.buildNumber)
                   {_appUpdate = appReleases.latestRelease, notifyListeners()}
+                // if (appReleases.latestVersion >
+                //         (_appPreferences?.apiVersion ?? 0) &&
+                //     appReleases.latestVersion >
+                //         (_appPreferences?.pauseUpdateUpto ?? 0))
+                //   {_appUpdate = appReleases.latestRelease, notifyListeners()}
               }
           });
     }
@@ -155,7 +168,7 @@ class PreferenceState extends ChangeNotifier {
 
   void cancelUpdate() {
     remindUpdate();
-    _appPreferences?.pauseUpdateUpto = _appUpdate?.apiVersion ?? 0.00;
+    _appPreferences?.pauseUpdateUpto = _appUpdate?.version ?? '0';
   }
 
   void remindUpdate() {
@@ -191,11 +204,14 @@ class PreferenceState extends ChangeNotifier {
     if (!pathExist) return;
     //Open the file in the path
     await OpenFilex.open(filePath);
-    _appPreferences?.update(apiVersion: _appUpdate?.apiVersion);
+    // _appPreferences?.update(apiVersion: _appUpdate?.version);
   }
 
   void showUpdateDialogue({required BuildContext context}) {
-    if (!appUpdatable) return;
+    if (!appUpdatable ||
+        !_coreDb.containsKey(AppConstants.dataAvailabilityKey)) {
+      return;
+    }
     Future.delayed(Duration.zero, () {
       showDialog(
           context: context,
