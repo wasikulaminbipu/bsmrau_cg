@@ -109,6 +109,13 @@ class PreferenceState extends ChangeNotifier {
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.wifi ||
         connectivityResult == ConnectivityResult.mobile) {
+      if (_appPreferences == null ||
+          _appPreferences?.batchNo == 0 ||
+          _appPreferences?.faculty == '') {
+        // print("No");
+        return;
+      }
+
       await http.get(Uri.parse(AppConstants.parentDbUrl)).then((value) => {
             if (value.statusCode == 200)
               {
@@ -118,6 +125,7 @@ class PreferenceState extends ChangeNotifier {
                     facultyName: _appPreferences?.faculty ?? ''),
                 if (onlineDbVersion > (_appPreferences?.dbVersion ?? 0))
                   {
+                    // print("Tut Tut"),
                     updateCoursePlan(
                         dbLink: parentDb.dbLink(
                             batchNo: _appPreferences?.batchNo ?? 0,
@@ -140,7 +148,7 @@ class PreferenceState extends ChangeNotifier {
             if (value.statusCode == 200)
               {
                 appReleases = AppReleases.fromCSV(value.body),
-                if (appReleases.latestVersion != _packageInfo?.version &&
+                if (appReleases.latestVersion != _packageInfo?.version ||
                     appReleases.latestVersion != _packageInfo?.buildNumber)
                   {_appUpdate = appReleases.latestRelease, notifyListeners()}
                 // if (appReleases.latestVersion >

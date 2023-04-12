@@ -16,15 +16,24 @@ class UpdateDialogue extends StatelessWidget {
           'New Version of the app available. Please Download the app and be updated'),
       // actionsOverflowAlignment: OverflowBarAlignment.right,
       actions: [
-        ElevatedButton(onPressed: onDownload, child: const Text('Update')),
+        ElevatedButton(
+            onPressed: () {
+              onDownload();
+              Navigator.pop(context);
+            },
+            child: const Text('Update')),
         Visibility(
             visible: onRemindMe != null,
             child: ElevatedButton(
-                onPressed: onRemindMe, child: const Text('Remind Me'))),
+                onPressed: () {
+                  onRemindMe!();
+                  Navigator.pop(context);
+                },
+                child: const Text('Remind Me'))),
         Visibility(
           visible: onCancel != null,
           child: ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.pop(context),
               child: const Text('Cancel')),
         ),
       ],

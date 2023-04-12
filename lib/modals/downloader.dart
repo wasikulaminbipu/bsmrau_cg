@@ -12,9 +12,9 @@ class Downloader {
 
   void Function(dynamic data) onChanged = (data) {};
 
-  String _id = '';
-  int _progress = 0;
-  DownloadTaskStatus _status = DownloadTaskStatus.undefined;
+  // String _id = '';
+  // int _progress = 0;
+  // DownloadTaskStatus _status = DownloadTaskStatus.undefined;
 
   Future<void> initialize() async {
     if (_isInitialized) return;

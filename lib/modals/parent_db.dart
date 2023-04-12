@@ -89,6 +89,7 @@ class ParentDb {
         .database
         .version;
     return dbVersion;
+    // return 0.00;
   }
 
   Batch getBatchByBatchNo(int batchNo) {
