@@ -23,7 +23,7 @@ class PreferenceState extends ChangeNotifier {
   final Box<dynamic> _coreDb = Hive.box(AppConstants.dbName);
 
   AppPreferences? _appPreferences;
-  AppRelease? _appUpdate;
+  AppRelease _appUpdate = AppRelease.zero();
 
   PackageInfo? _packageInfo;
 
@@ -65,17 +65,19 @@ class PreferenceState extends ChangeNotifier {
   //============================================================================
   //-----------------------------Getters----------------------------------------
   //============================================================================
-  String get appLink => _appUpdate?.source ?? '';
-  String get releaseType => _appUpdate?.releaseType ?? '';
-  bool get showAvoidButton => (_appUpdate?.updateLevel ?? 2) < 2;
-  bool get showBackButton => (_appUpdate?.updateLevel ?? 0) < 3;
+  String get appLink => _appUpdate.source;
+  String get releaseType => _appUpdate.releaseType;
+  bool get showAvoidButton => _appUpdate.updateLevel < 2;
+  bool get showBackButton => _appUpdate.updateLevel < 3;
   ThemeMode get themMode =>
       ThemeMode.values[_appPreferences?.themModeIndex ?? 0];
   String get initialRoute =>
       Hive.box('coreDb').containsKey('dataAvailable') ? '/' : '/init';
 
   //TODO: create the app Updatable when build number changes
-  bool get appUpdatable => _appUpdate?.version != _packageInfo?.version;
+  bool get appUpdatable =>
+      _appUpdate.version != AppRelease.zero().version &&
+      _appUpdate.version != _packageInfo?.version;
 
   //============================================================================
   //-----------------------------Other Functions--------------------------------
@@ -125,7 +127,6 @@ class PreferenceState extends ChangeNotifier {
                     facultyName: _appPreferences?.faculty ?? ''),
                 if (onlineDbVersion > (_appPreferences?.dbVersion ?? 0))
                   {
-                    // print("Tut Tut"),
                     updateCoursePlan(
                         dbLink: parentDb.dbLink(
                             batchNo: _appPreferences?.batchNo ?? 0,
@@ -148,9 +149,14 @@ class PreferenceState extends ChangeNotifier {
             if (value.statusCode == 200)
               {
                 appReleases = AppReleases.fromCSV(value.body),
+                print(appReleases.latestVersion != _packageInfo?.version ||
+                    appReleases.latestVersion != _packageInfo?.buildNumber),
                 if (appReleases.latestVersion != _packageInfo?.version ||
                     appReleases.latestVersion != _packageInfo?.buildNumber)
-                  {_appUpdate = appReleases.latestRelease, notifyListeners()}
+                  {_appUpdate = appReleases.latestRelease}
+                else
+                  {_appUpdate = AppRelease.zero()},
+                notifyListeners()
                 // if (appReleases.latestVersion >
                 //         (_appPreferences?.apiVersion ?? 0) &&
                 //     appReleases.latestVersion >
@@ -176,7 +182,7 @@ class PreferenceState extends ChangeNotifier {
 
   void cancelUpdate() {
     remindUpdate();
-    _appPreferences?.pauseUpdateUpto = _appUpdate?.version ?? '0';
+    _appPreferences?.pauseUpdateUpto = _appUpdate.version;
   }
 
   void remindUpdate() {
@@ -200,13 +206,13 @@ class PreferenceState extends ChangeNotifier {
     bool pathExist = await Directory(path).exists();
 
     if (!pathExist) return;
-    await _downloader.download(source: _appUpdate?.source ?? '', path: path);
+    await _downloader.download(source: _appUpdate.source, path: path);
     await installApp();
   }
 
   Future<void> installApp() async {
     //Create the file path
-    String filePath = '$path${Platform.pathSeparator}${_appUpdate?.source}';
+    String filePath = '$path${Platform.pathSeparator}${_appUpdate.source}';
     //Check if the path exist. If not exist return
     bool pathExist = await File(filePath).exists();
     if (!pathExist) return;
