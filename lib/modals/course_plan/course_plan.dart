@@ -10,13 +10,13 @@ class CoursePlan extends HiveObject {
   @HiveField(0)
   CourseLocation startLocation;
 
-  @HiveField(1)
+  @HiveField(3)
   CourseLocation currentLocation;
 
-  @HiveField(2)
+  @HiveField(1)
   double startCgpa = 0.00;
 
-  @HiveField(3)
+  @HiveField(2)
   List<Level> levels = [];
 
   CoursePlan(
@@ -125,10 +125,12 @@ class CoursePlan extends HiveObject {
   //the data will be stored in the variables available
   void inputInitialData(
       {required String level, required String term, required double cgpa}) {
-    startLocation = _getIndex(term: term, level: level);
-    startCgpa = cgpa;
-    currentLocation = startLocation;
-    save();
+    if (startLocation.levelIndex == 0 && startLocation.termIndex == 0) {
+      startLocation = _getIndex(term: term, level: level);
+      startCgpa = cgpa;
+      currentLocation = startLocation;
+      save();
+    }
   }
 
   //This method is created for setting the achieved point
@@ -149,6 +151,9 @@ class CoursePlan extends HiveObject {
   //This Method is created for changing term data
   //This method should get the next term data based on current term and level
   void nextTerm() {
+    final tmpLevelLocation = startLocation.levelIndex;
+    final tmpTermLocation = startLocation.termIndex;
+
     currentLocation.levelIndex =
         (currentLocation.levelIndex < (levels.length - 1) &&
                 currentLocation.termIndex ==
@@ -159,7 +164,11 @@ class CoursePlan extends HiveObject {
             (levels[currentLocation.levelIndex].terms.length - 1))
         ? currentLocation.termIndex + 1
         : 0;
+
+    startLocation = CourseLocation(
+        levelIndex: tmpLevelLocation, termIndex: tmpTermLocation);
     save();
+    print('startLocation $startLocation');
   }
 
   //This method is created for changing term data
@@ -265,8 +274,8 @@ class CoursePlan extends HiveObject {
     double tmpTotalCredits = 0.00;
     double tmpTotalPoints = 0.00;
 
-    // print(currentLocation);
-    // print(startLocation);
+    print(currentLocation);
+    print(startLocation);
     // print(_getIndex(term: 'Summer', level: 'Level III'));
 
     //Make sure that for loop go through all the levels and all the terms
@@ -290,31 +299,6 @@ class CoursePlan extends HiveObject {
         } else {
           break;
         }
-
-        // if (i == startLocation.levelIndex && j < startLocation.termIndex) {
-        //   //Calculate Gpa upto current term
-        //   tmpTotalCredits += data.totalCredits;
-        //   tmpTotalPoints += (startCgpa * data.totalCredits);
-        // } else if (i == currentLocation.levelIndex &&
-        //     j > currentLocation.termIndex) {
-        //   // continue;
-        // } else {
-        //   tmpTotalCredits += data.workingCredits;
-        //   tmpTotalPoints += (data.workingCredits * data.gpa);
-        // }
-
-        // //Check If current location is before the start Loc      ation
-        // if (i < startLocation.levelIndex ||
-        //     (startLocation.levelIndex == i && j < startLocation.termIndex)) {
-        //   //When its before the start Location
-        //   tmpTotalCredits += data.totalCredits;
-        //   tmpTotalPoints += (startCgpa * data.totalCredits);
-        // } else if (i < currentLocation.levelIndex ||
-        //     i == currentLocation.levelIndex && j <= currentLocation.termIndex) {
-        //   //When its in start location or further
-        //   tmpTotalCredits += data.workingCredits;
-        //   tmpTotalPoints += (data.workingCredits * data.gpa);
-        // }
       }
     }
 

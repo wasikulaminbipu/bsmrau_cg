@@ -17,10 +17,10 @@ class CoursePlanAdapter extends TypeAdapter<CoursePlan> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CoursePlan(
-      levels: (fields[3] as List).cast<Level>(),
-      startCgpa: fields[2] as double,
+      levels: (fields[2] as List).cast<Level>(),
+      startCgpa: fields[1] as double,
       startLocation: fields[0] as CourseLocation,
-      currentLocation: fields[1] as CourseLocation,
+      currentLocation: fields[3] as CourseLocation,
     );
   }
 
@@ -30,11 +30,11 @@ class CoursePlanAdapter extends TypeAdapter<CoursePlan> {
       ..writeByte(4)
       ..writeByte(0)
       ..write(obj.startLocation)
-      ..writeByte(1)
-      ..write(obj.currentLocation)
-      ..writeByte(2)
-      ..write(obj.startCgpa)
       ..writeByte(3)
+      ..write(obj.currentLocation)
+      ..writeByte(1)
+      ..write(obj.startCgpa)
+      ..writeByte(2)
       ..write(obj.levels);
   }
 
