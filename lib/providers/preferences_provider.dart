@@ -149,8 +149,8 @@ class PreferenceState extends ChangeNotifier {
             if (value.statusCode == 200)
               {
                 appReleases = AppReleases.fromCSV(value.body),
-                print(appReleases.latestVersion != _packageInfo?.version ||
-                    appReleases.latestVersion != _packageInfo?.buildNumber),
+                // print(appReleases.latestVersion != _packageInfo?.version ||
+                //     appReleases.latestVersion != _packageInfo?.buildNumber),
                 if (appReleases.latestVersion != _packageInfo?.version ||
                     appReleases.latestVersion != _packageInfo?.buildNumber)
                   {_appUpdate = appReleases.latestRelease}

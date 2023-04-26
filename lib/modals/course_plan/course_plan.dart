@@ -265,8 +265,8 @@ class CoursePlan extends HiveObject {
     double tmpTotalCredits = 0.00;
     double tmpTotalPoints = 0.00;
 
-    print(currentLocation);
-    print(startLocation);
+    // print(currentLocation);
+    // print(startLocation);
     // print(_getIndex(term: 'Summer', level: 'Level III'));
 
     //Make sure that for loop go through all the levels and all the terms
