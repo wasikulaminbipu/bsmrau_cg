@@ -265,25 +265,56 @@ class CoursePlan extends HiveObject {
     double tmpTotalCredits = 0.00;
     double tmpTotalPoints = 0.00;
 
+    print(currentLocation);
+    print(startLocation);
+    // print(_getIndex(term: 'Summer', level: 'Level III'));
+
     //Make sure that for loop go through all the levels and all the terms
     //Loop over all the levels available upto current level
-    for (var i = 0; i < levels.length; i++) {
+    for (var i = 0; i <= currentLocation.levelIndex; i++) {
       //Loop over all the terms available upto current term
       for (var j = 0; j < levels[i].terms.length; j++) {
         var data = levels[i].terms[j];
+        var term = levels[i].terms[j];
 
-        //Check If current location is before the start Loc      ation
         if (i < startLocation.levelIndex ||
-            (startLocation.levelIndex == i && j < startLocation.termIndex)) {
-          //When its before the start Location
+            (i == startLocation.levelIndex && j < startLocation.termIndex)) {
+          //Calculate Gpa upto current term
           tmpTotalCredits += data.totalCredits;
           tmpTotalPoints += (startCgpa * data.totalCredits);
         } else if (i < currentLocation.levelIndex ||
-            i == currentLocation.levelIndex && j <= currentLocation.termIndex) {
-          //When its in start location or further
+            (i == currentLocation.levelIndex &&
+                j <= currentLocation.termIndex)) {
           tmpTotalCredits += data.workingCredits;
           tmpTotalPoints += (data.workingCredits * data.gpa);
+        } else {
+          break;
         }
+
+        // if (i == startLocation.levelIndex && j < startLocation.termIndex) {
+        //   //Calculate Gpa upto current term
+        //   tmpTotalCredits += data.totalCredits;
+        //   tmpTotalPoints += (startCgpa * data.totalCredits);
+        // } else if (i == currentLocation.levelIndex &&
+        //     j > currentLocation.termIndex) {
+        //   // continue;
+        // } else {
+        //   tmpTotalCredits += data.workingCredits;
+        //   tmpTotalPoints += (data.workingCredits * data.gpa);
+        // }
+
+        // //Check If current location is before the start Loc      ation
+        // if (i < startLocation.levelIndex ||
+        //     (startLocation.levelIndex == i && j < startLocation.termIndex)) {
+        //   //When its before the start Location
+        //   tmpTotalCredits += data.totalCredits;
+        //   tmpTotalPoints += (startCgpa * data.totalCredits);
+        // } else if (i < currentLocation.levelIndex ||
+        //     i == currentLocation.levelIndex && j <= currentLocation.termIndex) {
+        //   //When its in start location or further
+        //   tmpTotalCredits += data.workingCredits;
+        //   tmpTotalPoints += (data.workingCredits * data.gpa);
+        // }
       }
     }
 
