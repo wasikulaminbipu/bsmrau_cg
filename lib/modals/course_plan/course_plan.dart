@@ -128,7 +128,9 @@ class CoursePlan extends HiveObject {
     if (startLocation.levelIndex == 0 && startLocation.termIndex == 0) {
       startLocation = _getIndex(term: term, level: level);
       startCgpa = cgpa;
-      currentLocation = startLocation;
+      currentLocation = CourseLocation(
+          levelIndex: startLocation.levelIndex,
+          termIndex: startLocation.termIndex);
       save();
     }
   }
